@@ -46,25 +46,40 @@
         <div class="project">
             <h3>navexa ARMv8-A Library</h3>
             <div class="tags">C++20 | CMake | NEON Intrinsics | Inline Assembly | QEMU</div>
-            <p>A production-grade C++ library implementing advanced ARM architectural features on base ARMv8-A hardware via emulation layers.</p>
+            <p>A production-grade C++ library implementing advanced ARM architectural features (SVE emulation, SME matrix ops, MTE memory tagging, LSE atomics, virtualization helpers) on base ARMv8-A hardware via NEON intrinsics and inline assembly.</p>
             <ul>
-                <li>Engineered SVE emulation, SME matrix operations, and LSE atomics natively.</li>
+                <li>Engineered SVE emulation, SME matrix operations, and LSE atomics natively without physical ARM hardware support.</li>
                 <li>Cross-compiled for AArch64 architectures with full unit testing via Google Test and QEMU user-mode emulation.</li>
-                <li>Built an automated CI/CD pipeline ensuring compliance with low-level compilation standards.</li>
+                <li>Built an automated CI/CD pipeline ensuring strict compliance with low-level compilation and style standards.</li>
             </ul>
-            <p><a href="https://github.com/adarsh-v-h/navexa_ARMv8-A_Library.git" target="_blank">View Repository →</a></p>
+            <p><a href="https://github.com/adarsh-v-h/navexa.git" target="_blank">View Repository →</a></p>
         </div>
 
         <div class="project">
             <h3>High-Performance Limit Order Book</h3>
-            <div class="tags">Modern C++ | Low-Latency | Concurrency | Cache Tuning</div>
+            <div class="tags">Modern C++ | Low-Latency | Custom Allocators | Cache Tuning | Concurrency</div>
             <p>A functional financial matching engine optimized specifically for sub-microsecond tick-to-trade hot paths.</p>
             <ul>
-                <li>Architected using entirely zero-copy data structures and custom contiguous memory layouts.</li>
-                <li>Enforced cache-line alignment and explicit padding rules to eliminate false sharing and memory latency.</li>
-                <li>Designed allocation-free execution paths to ensure highly deterministic runtime performance under load.</li>
+                <li>Architected using entirely zero-copy data structures and custom contiguous memory layouts to eliminate latency spikes.</li>
+                <li>Enforced strict cache-line alignment and explicit padding rules to completely eliminate false sharing and memory latency overhead.</li>
+                <li>Designed allocation-free execution paths to guarantee highly deterministic runtime performance under intense execution load.</li>
+                <li>Integrated a custom <a href="https://github.com/adarsh-v-h/Custom-Allocator.git" target="_blank">Data-Split Pool Allocator</a> utilizing a Structure of Arrays (SoA) layout and Hot/Cold static data splitting (packing 16-byte <code>OrderHot</code> data separately from 24-byte out-of-band <code>OrderCold</code> metadata).</li>
+                <li>Aligned allocations to native 64-byte hardware cache lines, pulling 4 hot records into L1 simultaneously for 100% cache line utilization, achieving a ~1.77x throughput speedup over standard system heap engines.</li>
             </ul>
             <p><a href="https://github.com/adarsh-v-h/Order_book.git" target="_blank">View Repository →</a></p>
+        </div>
+
+        <div class="project">
+            <h3>Themis's Domain — Crime Record Management System</h3>
+            <div class="tags">Flask | MySQL | React | Cryptography | System Security | Performance Tuning</div>
+            <p>A police investigation dashboard and citizen portal built for the Bengaluru Police Department to streamline case assignments, track records, and secure evidence storage.</p>
+            <ul>
+                <li><strong>Database & Performance Optimization:</strong> Engineered a pooled MySQL connection layer (env-tunable, 1-32 connections per process) with comprehensive index trees on filter/sort columns and strict server-side pagination across all list endpoints to minimize data transfer overhead. Implemented server-side geocoding caching for permanent geospatial mapping layouts.</li>
+                <li><strong>AI & Automated Workflow:</strong> Integrated an background task scheduler algorithm executing automated citizen complaint-to-officer case assignments, alongside an automated PDF dossier generator routing records securely via Brevo transactional APIs.</li>
+                <li><strong>System Hardening & Security:</strong> Built a strict role-based authorization mesh featuring single-device session tokens with rigid TTL constraints and hard revocation. Enforced parameterized SQL queries globally to eliminate injection vulnerabilities.</li>
+                <li><strong>Boundary Defense & Hygiene:</strong> Protected public forms via Google reCAPTCHA v2 validation, rate-limited in-memory email OTP loops, and strict extension/size validation coupled with path-traversal guards on all evidence file upload streams. Hardened HTTP response pipelines with strict security headers (<code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>).</li>
+            </ul>
+            <p><a href="https://github.com/adarsh-v-h/Crime_DB.git" target="_blank">View Repository →</a></p>
         </div>
 
         <div class="project">
@@ -78,7 +93,56 @@
             <p><a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank">View Repository →</a></p>
         </div>
 
-        <h2>Engineering Leadership</h2>
+        <h2>Hackathons & Technical Competitions</h2>
+
+        <div class="project">
+            <h3>Smart India Hackathon (SIH) 2025</h3>
+            <div class="tags">Python | Flask | Database Normalization | Governance Tech</div>
+            <p>Cleared the competitive college-level selection round as one of the top-ranked teams to represent the institution at subsequent national tiers.</p>
+            <ul>
+                <li>Engineered a comprehensive Student ERP system mapped directly to a problem statement issued by the Jammu & Kashmir Government.</li>
+                <li>Designed features enabling students to seamlessly harmonize non-academic engagements with academic benchmarks through structured document filing and progress tracking tools.</li>
+            </ul>
+            <p><a href="https://github.com/adarsh-v-h/Student-ERP.git" target="_blank">View Repository →</a></p>
+        </div>
+
+        <div class="project">
+            <h3>PES University Cybersecurity Hackathon</h3>
+            <div class="tags">C | Network Programming | Packet Parsing | Pattern Entropy Analysis</div>
+            <p>Built a privacy-preserving network security tool tracking server load telemetry under zero-content visibility constraints.</p>
+            <ul>
+                <li>Developed an automated network Packet Analyzer targeting server infrastructure to detect anomaly patterns on raw interface pipelines.</li>
+                <li>Leveraged flow structural characteristics and statistical entropy calculations to seamlessly flag malicious or suspicious packet clusters without reading payload contents, preserving data privacy and execution speed.</li>
+            </ul>
+            <p><a href="https://github.com/adarsh-v-h/Packet-ANA.git" target="_blank">View Repository →</a></p>
+        </div>
+
+        <div class="project">
+            <h3>IEEE Hardware & Simulation Competition</h3>
+            <div class="tags">Embedded Systems | Logic Gates | Digital Circuit Design | Web Dev</div>
+            <p>Emerged as one of the top-performing teams within the institution, presenting the complete system schema to an evaluation panel of distinguished IIT Alumni.</p>
+            <ul>
+                <li>Constructed functional quantum gate emulations on an embedded system architecture utilizing combined networks of conventional logic gates to mirror physical qubit state transitions.</li>
+                <li>Developed and deployed an interactive, Chrome-based web educational game designed to dynamically visualize quantum logic behaviors for student audiences.</li>
+            </ul>
+        </div>
+
+        <div class="project">
+            <h3>Generative AI Prompt Battle</h3>
+            <div class="tags">Prompt Engineering | LLM Workflows | System Automation</div>
+            <p>Competed in real-time constraint-driven arenas leveraging generative architectures to execute multi-layered asset production and error parsing.</p>
+            <ul>
+                <li>Designed complex prompt routing mechanisms to output structured AI-based visual stories and automated product features.</li>
+                <li>Developed procedural strategies to identify, repair, and reinforce structurally broken or unstable prompt templates under strict runtime conditions.</li>
+            </ul>
+        </div>
+
+        <h2>Engineering Leadership & Experience</h2>
+        
+        <h3>Team Lead — Karnataka State Police Datathon</h3>
+        <p class="meta">2026 - Present</p>
+        <p>Directing a high-performance engineering cohort collaborating with the Karnataka State Police department. Leading architectural designs to integrate resilient AI pipelines and autonomous, tool-augmented Agentic workflows into official state law enforcement processing frameworks to minimize operational latency and eliminate human classification errors.</p>
+
         <h3>Founder & Lead, The Council</h3>
         <p class="meta">2025 - Present</p>
         <p>Founded and actively direct an elite 8-member engineering peer group dedicated to low-level engineering, systems optimization, and parallel language tracks across C++, Python, and Go.</p>

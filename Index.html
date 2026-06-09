@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adarsh V H | Systems & Low-Latency Engineering</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+            background-color: #0f172a;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        h1 { color: #ffffff; margin-bottom: 0.2rem; font-size: 2.5rem; }
+        h2 { color: #f1f5f9; border-bottom: 1px solid #334155; padding-bottom: 0.3rem; margin-top: 2.5rem; }
+        h3 { color: #38bdf8; margin-bottom: 0.5rem; }
+        a { color: #38bdf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .meta { color: #94a3b8; font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .project { margin-bottom: 2rem; background: #1e293b; padding: 1.5rem; border-radius: 6px; border: 1px solid #334155; }
+        .tags { font-family: monospace; color: #cbd5e1; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        ul { padding-left: 1.2rem; }
+        li { margin-bottom: 0.4rem; }
+        .contact-list { list-style: none; padding-left: 0; display: flex; gap: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Adarsh V H</h1>
+        <p class="meta">Systems & Low-Latency Engineer | Bengaluru, India</p>
+        <p>Second-year CSE student building close-to-the-metal software. Focused on Modern C++, memory management, performance engineering, and hardware-software co-design.</p>
+        <ul class="contact-list">
+            <li><a href="mailto:adarshvh2005@gmail.com">Email</a></li>
+            <li><a href="https://github.com/adarsh-v-h" target="_blank">GitHub</a></li>
+            <li><a href="https://linkedin.com/in/adarsh-v-h-2005abc" target="_blank">LinkedIn</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <h2>Technical Core Projects</h2>
+
+        <div class="project">
+            <h3>navexa ARMv8-A Library</h3>
+            <div class="tags">C++20 | CMake | NEON Intrinsics | Inline Assembly | QEMU</div>
+            <p>A production-grade C++ library implementing advanced ARM architectural features on base ARMv8-A hardware via emulation layers.</p>
+            <ul>
+                <li>Engineered SVE emulation, SME matrix operations, and LSE atomics natively.</li>
+                <li>Cross-compiled for AArch64 architectures with full unit testing via Google Test and QEMU user-mode emulation.</li>
+                <li>Built an automated CI/CD pipeline ensuring compliance with low-level compilation standards.</li>
+            </ul>
+            <p><a href="https://github.com/adarsh-v-h" target="_blank">View Repository →</a></p>
+        </div>
+
+        <div class="project">
+            <h3>High-Performance Limit Order Book</h3>
+            <div class="tags">Modern C++ | Low-Latency | Concurrency | Cache Tuning</div>
+            <p>A functional financial matching engine optimized specifically for sub-microsecond tick-to-trade hot paths.</p>
+            <ul>
+                <li>Architected using entirely zero-copy data structures and custom contiguous memory layouts.</li>
+                <li>Enforced cache-line alignment and explicit padding rules to eliminate false sharing and memory latency.</li>
+                <li>Designed allocation-free execution paths to ensure highly deterministic runtime performance under load.</li>
+            </ul>
+            <p><a href="https://github.com/adarsh-v-h" target="_blank">View Repository →</a></p>
+        </div>
+
+        <div class="project">
+            <h3>FADEC Engine Simulation</h3>
+            <div class="tags">C++ | Embedded Control Systems | Fault Tolerance</div>
+            <p>A heavy systems simulation environment modeling real-time aerospace digital engine control dynamics.</p>
+            <ul>
+                <li>Modeled real-time internal engine telemetry loops and physical state variables.</li>
+                <li>Implemented a robust, fault-tolerant control architecture designed to switch safely to backup control states upon anomaly detection.</li>
+            </ul>
+            <p><a href="https://github.com/adarsh-v-h" target="_blank">View Repository →</a></p>
+        </div>
+
+        <h2>Engineering Leadership</h2>
+        <h3>Founder & Lead, The Council</h3>
+        <p class="meta">2025 - Present</p>
+        <p>Founded and actively direct an elite 8-member engineering peer group dedicated to low-level engineering, systems optimization, and parallel language tracks across C++, Python, and Go.</p>
+    </main>
+
+</body>
+</html>

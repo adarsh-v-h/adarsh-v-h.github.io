@@ -5,148 +5,884 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adarsh V H | Systems & Low-Latency Engineering</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #e2e8f0;
-            background-color: #0f172a;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+        /* ─── RESET ────────────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #0d0d0f;
+            --surface:  #141416;
+            --yellow:   #facc15;
+            --blue:     #38bdf8;
+            --orange:   #f97316;
+            --green:    #4ade80;
+            --pink:     #f472b6;
+            --white:    #f1f5f9;
+            --muted:    #64748b;
+            --K:        #000000;
         }
-        h1 { color: #ffffff; margin-bottom: 0.2rem; font-size: 2.5rem; }
-        h2 { color: #f1f5f9; border-bottom: 1px solid #334155; padding-bottom: 0.3rem; margin-top: 2.5rem; }
-        h3 { color: #38bdf8; margin-bottom: 0.5rem; }
-        a { color: #38bdf8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .meta { color: #94a3b8; font-size: 0.95rem; margin-bottom: 1.5rem; }
-        .project { margin-bottom: 2rem; background: #1e293b; padding: 1.5rem; border-radius: 6px; border: 1px solid #334155; }
-        .tags { font-family: monospace; color: #cbd5e1; font-size: 0.85rem; margin-bottom: 0.8rem; }
-        ul { padding-left: 1.2rem; }
-        li { margin-bottom: 0.4rem; }
-        .contact-list { list-style: none; padding-left: 0; display: flex; gap: 1.5rem; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--yellow); color: var(--K); }
+
+        /* ─── SCROLL PROGRESS BAR ──────────────────────────────────── */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--yellow), var(--orange), var(--pink));
+            z-index: 9999;
+            transition: width 0.1s linear;
+            border-bottom: 2px solid var(--K);
+        }
+
+        /* ─── STICKY NAV ───────────────────────────────────────────── */
+        #site-nav {
+            position: fixed;
+            top: 4px; left: 0; right: 0;
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+            padding-top: 12px;
+        }
+
+        #site-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 0;
+            border: 3px solid var(--K);
+            box-shadow: 4px 4px 0 var(--K);
+            overflow: hidden;
+            pointer-events: all;
+            background: var(--K);
+        }
+
+        #site-nav ul li a {
+            display: block;
+            padding: 0.4rem 1.1rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--white);
+            text-decoration: none;
+            background: var(--K);
+            border-right: 2px solid #222;
+            transition: background 0.12s, color 0.12s;
+        }
+
+        #site-nav ul li:last-child a { border-right: none; }
+
+        #site-nav ul li a:hover,
+        #site-nav ul li a.active {
+            background: var(--yellow);
+            color: var(--K);
+        }
+
+        /* ─── HERO ─────────────────────────────────────────────────── */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            max-width: 960px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 3px;
+            background: var(--orange);
+        }
+
+        .hero-name {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .hero-name .accent-word {
+            color: var(--yellow);
+            display: inline-block;
+            position: relative;
+        }
+
+        /* The big underline stroke under "V H" */
+        .hero-name .accent-word::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            bottom: 4px;
+            height: 6px;
+            background: var(--yellow);
+        }
+
+        .hero-tagline {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--muted);
+            max-width: 540px;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* Contact pills */
+        .contact-list {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-list li a {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: var(--yellow);
+            color: var(--K);
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            text-decoration: none;
+            border: 3px solid var(--K);
+            box-shadow: 4px 4px 0 var(--K);
+            transition: transform 0.12s, box-shadow 0.12s;
+        }
+
+        .contact-list li a:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--K);
+        }
+
+        /* Big hero stat strip */
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            border: 3px solid var(--K);
+            box-shadow: 6px 6px 0 var(--K);
+            overflow: hidden;
+            max-width: 560px;
+        }
+
+        .stat {
+            flex: 1 1 140px;
+            padding: 1rem 1.25rem;
+            background: var(--surface);
+            border-right: 3px solid var(--K);
+        }
+
+        .stat:last-child { border-right: none; }
+
+        .stat-num {
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: var(--yellow);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-top: 0.2rem;
+        }
+
+        /* ─── SCROLL INDICATOR ─────────────────────────────────────── */
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            animation: bounce-hint 2s ease-in-out infinite;
+        }
+
+        .scroll-hint::before {
+            content: '↓';
+            font-size: 1rem;
+            color: var(--orange);
+        }
+
+        @keyframes bounce-hint {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(6px); opacity: 1; }
+        }
+
+        /* ─── SECTION WRAPPER ──────────────────────────────────────── */
+        .section-block {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        /* ─── SECTION LABEL ────────────────────────────────────────── */
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--K);
+            background: var(--yellow);
+            padding: 0.45rem 1rem;
+            border: 3px solid var(--K);
+            box-shadow: 4px 4px 0 var(--K);
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label.blue   { background: var(--blue); }
+        .section-label.orange { background: var(--orange); }
+        .section-label.green  { background: var(--green); }
+        .section-label.pink   { background: var(--pink); }
+
+        /* ─── DIVIDER STRIPE ───────────────────────────────────────── */
+        .stripe-divider {
+            height: 6px;
+            width: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--yellow) 0 28px, var(--K) 28px 32px,
+                var(--orange) 32px 60px, var(--K) 60px 64px,
+                var(--blue) 64px 92px, var(--K) 92px 96px,
+                var(--green) 96px 124px, var(--K) 124px 128px
+            );
+            border-top: 3px solid var(--K);
+            border-bottom: 3px solid var(--K);
+        }
+
+        /* ─── PROJECT CARDS ────────────────────────────────────────── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.75rem;
+        }
+
+        .project-card {
+            background: var(--surface);
+            border: 3px solid var(--K);
+            box-shadow: 6px 6px 0 var(--K);
+            padding: 1.75rem;
+            position: relative;
+            transition: transform 0.15s, box-shadow 0.15s;
+
+            /* scroll-reveal — starts hidden */
+            opacity: 0;
+            transform: translateY(32px);
+        }
+
+        .project-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.15s, box-shadow 0.15s;
+        }
+
+        .project-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0 var(--K);
+        }
+
+        /* Accent top bar */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px; right: -3px;
+            height: 5px;
+        }
+
+        .project-card.acc-yellow::before { background: var(--yellow); }
+        .project-card.acc-orange::before { background: var(--orange); }
+        .project-card.acc-blue::before   { background: var(--blue); }
+        .project-card.acc-green::before  { background: var(--green); }
+        .project-card.acc-pink::before   { background: var(--pink); }
+
+        /* Card number badge */
+        .card-num {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            font-family: monospace;
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+        }
+
+        /* Card title */
+        .project-card h3 {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: var(--white);
+            margin-bottom: 0.6rem;
+            padding-right: 3rem;
+            line-height: 1.2;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag-pill {
+            font-family: monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.18rem 0.5rem;
+            border: 2px solid var(--K);
+            box-shadow: 2px 2px 0 var(--K);
+        }
+
+        .project-card.acc-yellow .tag-pill { background: var(--yellow); color: var(--K); }
+        .project-card.acc-orange .tag-pill { background: var(--orange); color: var(--K); }
+        .project-card.acc-blue .tag-pill   { background: var(--blue);   color: var(--K); }
+        .project-card.acc-green .tag-pill  { background: var(--green);  color: var(--K); }
+        .project-card.acc-pink .tag-pill   { background: var(--pink);   color: var(--K); }
+
+        .project-card p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            margin-bottom: 0.9rem;
+            line-height: 1.65;
+        }
+
+        .project-card ul {
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-card li {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 0.45rem;
+            line-height: 1.6;
+        }
+
+        .project-card li strong { color: var(--white); font-weight: 700; }
+
+        .project-card li code {
+            font-family: monospace;
+            font-size: 0.78rem;
+            background: rgba(56,189,248,0.1);
+            color: var(--blue);
+            padding: 0.1rem 0.3rem;
+            border: 1px solid rgba(56,189,248,0.3);
+        }
+
+        .project-card li a {
+            color: var(--blue);
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
+        }
+
+        .project-card li a:hover { color: var(--yellow); }
+
+        /* Repo button */
+        .repo-btn {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--K);
+            background: var(--white);
+            padding: 0.4rem 1rem;
+            border: 2px solid var(--K);
+            box-shadow: 3px 3px 0 var(--K);
+            text-decoration: none;
+            transition: transform 0.12s, box-shadow 0.12s;
+            margin-top: 0.25rem;
+        }
+
+        .project-card.acc-yellow .repo-btn { background: var(--yellow); }
+        .project-card.acc-orange .repo-btn { background: var(--orange); }
+        .project-card.acc-blue   .repo-btn { background: var(--blue); }
+        .project-card.acc-green  .repo-btn { background: var(--green); }
+        .project-card.acc-pink   .repo-btn { background: var(--pink); }
+
+        .repo-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--K);
+        }
+
+        /* ─── HACKATHON CARDS (2-col on desktop) ───────────────────── */
+        .hack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ─── LEADERSHIP BLOCK ─────────────────────────────────────── */
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .lead-card {
+            border: 3px solid var(--K);
+            box-shadow: 6px 6px 0 var(--K);
+            padding: 1.5rem;
+            background: var(--surface);
+            position: relative;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        .lead-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .lead-card::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px; right: -3px;
+            height: 5px;
+        }
+
+        .lead-card:nth-child(1)::before { background: var(--orange); }
+        .lead-card:nth-child(2)::before { background: var(--pink); }
+
+        .lead-card h3 {
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: var(--white);
+            margin-bottom: 0.2rem;
+        }
+
+        .lead-card .meta {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--orange);
+            margin-bottom: 0.7rem;
+        }
+
+        .lead-card p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        /* ─── SCROLL-REVEAL ANIMATION DELAYS ───────────────────────── */
+        .project-card:nth-child(1) { transition-delay: 0.05s; }
+        .project-card:nth-child(2) { transition-delay: 0.12s; }
+        .project-card:nth-child(3) { transition-delay: 0.19s; }
+        .project-card:nth-child(4) { transition-delay: 0.26s; }
+
+        /* ─── SECTION BG ALTERNATION ───────────────────────────────── */
+        .section-dark  { background: var(--bg); }
+        .section-tint  { background: #111113; }
+
+        /* ─── FOOTER ───────────────────────────────────────────────── */
+        footer {
+            border-top: 3px solid var(--K);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            background: var(--surface);
+        }
+
+        footer span { color: var(--yellow); }
+
+        /* ─── SCROLLBAR ────────────────────────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--yellow); border: 2px solid var(--K); }
+
+        /* ─── RESPONSIVE ───────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .section-block { padding: 3.5rem 1.25rem; }
+            .hack-grid, .leadership-grid { grid-template-columns: 1fr; }
+            #hero { padding: 7rem 1.25rem 3rem; }
+            #site-nav ul li a { padding: 0.4rem 0.7rem; font-size: 0.62rem; }
+        }
+
+        @media (max-width: 480px) {
+            .section-block { padding: 2.5rem 1rem; }
+            #hero { padding: 6rem 1rem 2.5rem; }
+            .project-card, .lead-card { padding: 1.25rem 1rem; box-shadow: 4px 4px 0 var(--K); }
+            .project-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--K); }
+            .hero-stats { max-width: 100%; }
+            .stat { padding: 0.75rem 0.9rem; }
+            .stat-num { font-size: 1.5rem; }
+            #site-nav ul li a { padding: 0.35rem 0.55rem; font-size: 0.58rem; letter-spacing: 0.06em; }
+        }
+
+        @media (min-width: 1200px) {
+            .section-block { max-width: 1080px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-card, .lead-card {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: box-shadow 0.15s !important;
+            }
+            .scroll-hint { animation: none; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Adarsh V H</h1>
-        <p class="meta">Systems & Low-Latency Engineer | Bengaluru, India</p>
-        <p>Second-year CSE student building close-to-the-metal software. Focused on Modern C++, memory management, performance engineering, and hardware-software co-design.</p>
+<!-- ─── SCROLL PROGRESS ──────────────────────────────────────── -->
+<div id="progress-bar"></div>
+
+<!-- ─── STICKY NAV ──────────────────────────────────────────── -->
+<nav id="site-nav">
+    <ul>
+        <li><a href="#hero" class="active">Home</a></li>
+        <li><a href="#core-projects">Projects</a></li>
+        <li><a href="#hackathons">Hackathons</a></li>
+        <li><a href="#leadership">Leadership</a></li>
+    </ul>
+</nav>
+
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<section id="hero" class="section-dark">
+    <div style="max-width:960px; margin:0 auto; padding:8rem 2rem 4rem; position:relative;">
+        <div class="hero-eyebrow">CSE · Bengaluru, India · 2nd Year</div>
+        <h1 class="hero-name">
+            Adarsh<br>
+            <span class="accent-word">V H</span>
+        </h1>
+        <p class="hero-tagline">
+            Second-year CSE student building close-to-the-metal software. Focused on Modern C++, memory management, performance engineering, and hardware-software co-design.
+        </p>
         <ul class="contact-list">
             <li><a href="mailto:adarshvh2005@gmail.com">Email</a></li>
             <li><a href="https://github.com/adarsh-v-h" target="_blank">GitHub</a></li>
             <li><a href="https://linkedin.com/in/adarsh-v-h-2005abc" target="_blank">LinkedIn</a></li>
         </ul>
-    </header>
-
-    <main>
-        <h2>Technical Core Projects</h2>
-
-        <div class="project">
-            <h3>navexa ARMv8-A Library</h3>
-            <div class="tags">C++20 | CMake | NEON Intrinsics | Inline Assembly | QEMU</div>
-            <p>A production-grade C++ library implementing advanced ARM architectural features (SVE emulation, SME matrix ops, MTE memory tagging, LSE atomics, virtualization helpers) on base ARMv8-A hardware via NEON intrinsics and inline assembly.</p>
-            <ul>
-                <li>Engineered SVE emulation, SME matrix operations, and LSE atomics natively without physical ARM hardware support.</li>
-                <li>Cross-compiled for AArch64 architectures with full unit testing via Google Test and QEMU user-mode emulation.</li>
-                <li>Built an automated CI/CD pipeline ensuring strict compliance with low-level compilation and style standards.</li>
-            </ul>
-            <p><a href="https://github.com/adarsh-v-h/navexa.git" target="_blank">View Repository →</a></p>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-num">8</div>
+                <div class="stat-label">Council Members</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">28</div>
+                <div class="stat-label">Tests Passing</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">1.77×</div>
+                <div class="stat-label">Throughput Gain</div>
+            </div>
         </div>
+        <div class="scroll-hint">Scroll to explore</div>
+    </div>
+</section>
 
-        <div class="project">
-            <h3>High-Performance Limit Order Book</h3>
-            <div class="tags">Modern C++ | Low-Latency | Custom Allocators | Cache Tuning | Concurrency</div>
-            <p>A functional financial matching engine optimized specifically for sub-microsecond tick-to-trade hot paths.</p>
-            <ul>
-                <li>Architected using entirely zero-copy data structures and custom contiguous memory layouts to eliminate latency spikes.</li>
-                <li>Enforced strict cache-line alignment and explicit padding rules to completely eliminate false sharing and memory latency overhead.</li>
-                <li>Designed allocation-free execution paths to guarantee highly deterministic runtime performance under intense execution load.</li>
-                <li>Integrated a custom <a href="https://github.com/adarsh-v-h/Custom-Allocator.git" target="_blank">Data-Split Pool Allocator</a> utilizing a Structure of Arrays (SoA) layout and Hot/Cold static data splitting (packing 16-byte <code>OrderHot</code> data separately from 24-byte out-of-band <code>OrderCold</code> metadata).</li>
-                <li>Aligned allocations to native 64-byte hardware cache lines, pulling 4 hot records into L1 simultaneously for 100% cache line utilization, achieving a ~1.77x throughput speedup over standard system heap engines.</li>
-            </ul>
-            <p><a href="https://github.com/adarsh-v-h/Order_book.git" target="_blank">View Repository →</a></p>
+<div class="stripe-divider"></div>
+
+<!-- ─── CORE PROJECTS ────────────────────────────────────────── -->
+<section id="core-projects" class="section-tint">
+    <div class="section-block">
+        <div class="section-label">Technical Core Projects</div>
+
+        <div class="card-grid">
+
+            <div class="project-card acc-yellow">
+                <span class="card-num">01</span>
+                <h3>navexa ARMv8-A Library</h3>
+                <div class="tags">
+                    <span class="tag-pill">C++20</span>
+                    <span class="tag-pill">CMake</span>
+                    <span class="tag-pill">NEON Intrinsics</span>
+                    <span class="tag-pill">Inline Assembly</span>
+                    <span class="tag-pill">QEMU</span>
+                </div>
+                <p>A production-grade C++ library implementing advanced ARM architectural features (SVE emulation, SME matrix ops, MTE memory tagging, LSE atomics, virtualization helpers) on base ARMv8-A hardware via NEON intrinsics and inline assembly.</p>
+                <ul>
+                    <li>Engineered SVE emulation, SME matrix operations, and LSE atomics natively without physical ARM hardware support.</li>
+                    <li>Cross-compiled for AArch64 architectures with full unit testing via Google Test and QEMU user-mode emulation.</li>
+                    <li>Built an automated CI/CD pipeline ensuring strict compliance with low-level compilation and style standards.</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/navexa.git" target="_blank" class="repo-btn">View Repository →</a>
+            </div>
+
+            <div class="project-card acc-orange">
+                <span class="card-num">02</span>
+                <h3>High-Performance Limit Order Book</h3>
+                <div class="tags">
+                    <span class="tag-pill">Modern C++</span>
+                    <span class="tag-pill">Low-Latency</span>
+                    <span class="tag-pill">Custom Allocators</span>
+                    <span class="tag-pill">Cache Tuning</span>
+                    <span class="tag-pill">Concurrency</span>
+                </div>
+                <p>A functional financial matching engine optimized specifically for sub-microsecond tick-to-trade hot paths.</p>
+                <ul>
+                    <li>Architected using entirely zero-copy data structures and custom contiguous memory layouts to eliminate latency spikes.</li>
+                    <li>Enforced strict cache-line alignment and explicit padding rules to completely eliminate false sharing and memory latency overhead.</li>
+                    <li>Designed allocation-free execution paths to guarantee highly deterministic runtime performance under intense execution load.</li>
+                    <li>Integrated a custom <a href="https://github.com/adarsh-v-h/Custom-Allocator.git" target="_blank">Data-Split Pool Allocator</a> utilizing a Structure of Arrays (SoA) layout and Hot/Cold static data splitting (packing 16-byte <code>OrderHot</code> data separately from 24-byte out-of-band <code>OrderCold</code> metadata).</li>
+                    <li>Aligned allocations to native 64-byte hardware cache lines, pulling 4 hot records into L1 simultaneously for 100% cache line utilization, achieving a ~1.77x throughput speedup over standard system heap engines.</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/Order_book.git" target="_blank" class="repo-btn">View Repository →</a>
+            </div>
+
+            <div class="project-card acc-blue">
+                <span class="card-num">03</span>
+                <h3>Themis's Domain — Crime Record Management System</h3>
+                <div class="tags">
+                    <span class="tag-pill">Flask</span>
+                    <span class="tag-pill">MySQL</span>
+                    <span class="tag-pill">React</span>
+                    <span class="tag-pill">Cryptography</span>
+                    <span class="tag-pill">System Security</span>
+                    <span class="tag-pill">Performance Tuning</span>
+                </div>
+                <p>A police investigation dashboard and citizen portal built for the Bengaluru Police Department to streamline case assignments, track records, and secure evidence storage.</p>
+                <ul>
+                    <li><strong>Database &amp; Performance Optimization:</strong> Engineered a pooled MySQL connection layer (env-tunable, 1-32 connections per process) with comprehensive index trees on filter/sort columns and strict server-side pagination across all list endpoints to minimize data transfer overhead. Implemented server-side geocoding caching for permanent geospatial mapping layouts.</li>
+                    <li><strong>AI &amp; Automated Workflow:</strong> Integrated an background task scheduler algorithm executing automated citizen complaint-to-officer case assignments, alongside an automated PDF dossier generator routing records securely via Brevo transactional APIs.</li>
+                    <li><strong>System Hardening &amp; Security:</strong> Built a strict role-based authorization mesh featuring single-device session tokens with rigid TTL constraints and hard revocation. Enforced parameterized SQL queries globally to eliminate injection vulnerabilities.</li>
+                    <li><strong>Boundary Defense &amp; Hygiene:</strong> Protected public forms via Google reCAPTCHA v2 validation, rate-limited in-memory email OTP loops, and strict extension/size validation coupled with path-traversal guards on all evidence file upload streams. Hardened HTTP response pipelines with strict security headers (<code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>).</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/Crime_DB.git" target="_blank" class="repo-btn">View Repository →</a>
+            </div>
+
+            <div class="project-card acc-green">
+                <span class="card-num">04</span>
+                <h3>FADEC Engine Simulation</h3>
+                <div class="tags">
+                    <span class="tag-pill">C++</span>
+                    <span class="tag-pill">Embedded Control Systems</span>
+                    <span class="tag-pill">Fault Tolerance</span>
+                </div>
+                <p>A heavy systems simulation environment modeling real-time aerospace digital engine control dynamics.</p>
+                <ul>
+                    <li>Modeled real-time internal engine telemetry loops and physical state variables.</li>
+                    <li>Implemented a robust, fault-tolerant control architecture designed to switch safely to backup control states upon anomaly detection.</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank" class="repo-btn">View Repository →</a>
+            </div>
+
         </div>
+    </div>
+</section>
 
-        <div class="project">
-            <h3>Themis's Domain — Crime Record Management System</h3>
-            <div class="tags">Flask | MySQL | React | Cryptography | System Security | Performance Tuning</div>
-            <p>A police investigation dashboard and citizen portal built for the Bengaluru Police Department to streamline case assignments, track records, and secure evidence storage.</p>
-            <ul>
-                <li><strong>Database & Performance Optimization:</strong> Engineered a pooled MySQL connection layer (env-tunable, 1-32 connections per process) with comprehensive index trees on filter/sort columns and strict server-side pagination across all list endpoints to minimize data transfer overhead. Implemented server-side geocoding caching for permanent geospatial mapping layouts.</li>
-                <li><strong>AI & Automated Workflow:</strong> Integrated an background task scheduler algorithm executing automated citizen complaint-to-officer case assignments, alongside an automated PDF dossier generator routing records securely via Brevo transactional APIs.</li>
-                <li><strong>System Hardening & Security:</strong> Built a strict role-based authorization mesh featuring single-device session tokens with rigid TTL constraints and hard revocation. Enforced parameterized SQL queries globally to eliminate injection vulnerabilities.</li>
-                <li><strong>Boundary Defense & Hygiene:</strong> Protected public forms via Google reCAPTCHA v2 validation, rate-limited in-memory email OTP loops, and strict extension/size validation coupled with path-traversal guards on all evidence file upload streams. Hardened HTTP response pipelines with strict security headers (<code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>).</li>
-            </ul>
-            <p><a href="https://github.com/adarsh-v-h/Crime_DB.git" target="_blank">View Repository →</a></p>
+<div class="stripe-divider"></div>
+
+<!-- ─── HACKATHONS ───────────────────────────────────────────── -->
+<section id="hackathons" class="section-dark">
+    <div class="section-block">
+        <div class="section-label blue">Hackathons &amp; Technical Competitions</div>
+
+        <div class="hack-grid">
+
+            <div class="project-card acc-yellow">
+                <span class="card-num">01</span>
+                <h3>Smart India Hackathon (SIH) 2025</h3>
+                <div class="tags">
+                    <span class="tag-pill">Python</span>
+                    <span class="tag-pill">Flask</span>
+                    <span class="tag-pill">Database Normalization</span>
+                    <span class="tag-pill">Governance Tech</span>
+                </div>
+                <p>Cleared the competitive college-level selection round as one of the top-ranked teams to represent the institution at subsequent national tiers.</p>
+                <ul>
+                    <li>Engineered a comprehensive Student ERP system mapped directly to a problem statement issued by the Jammu &amp; Kashmir Government.</li>
+                    <li>Designed features enabling students to seamlessly harmonize non-academic engagements with academic benchmarks through structured document filing and progress tracking tools.</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/Student-ERP.git" target="_blank" class="repo-btn">View Repository →</a>
+            </div>
+
+            <div class="project-card acc-orange">
+                <span class="card-num">02</span>
+                <h3>PES University Cybersecurity Hackathon</h3>
+                <div class="tags">
+                    <span class="tag-pill">C</span>
+                    <span class="tag-pill">Network Programming</span>
+                    <span class="tag-pill">Packet Parsing</span>
+                    <span class="tag-pill">Pattern Entropy Analysis</span>
+                </div>
+                <p>Built a privacy-preserving network security tool tracking server load telemetry under zero-content visibility constraints.</p>
+                <ul>
+                    <li>Developed an automated network Packet Analyzer targeting server infrastructure to detect anomaly patterns on raw interface pipelines.</li>
+                    <li>Leveraged flow structural characteristics and statistical entropy calculations to seamlessly flag malicious or suspicious packet clusters without reading payload contents, preserving data privacy and execution speed.</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/Packet-ANA.git" target="_blank" class="repo-btn">View Repository →</a>
+            </div>
+
+            <div class="project-card acc-blue">
+                <span class="card-num">03</span>
+                <h3>IEEE Hardware &amp; Simulation Competition</h3>
+                <div class="tags">
+                    <span class="tag-pill">Embedded Systems</span>
+                    <span class="tag-pill">Logic Gates</span>
+                    <span class="tag-pill">Digital Circuit Design</span>
+                    <span class="tag-pill">Web Dev</span>
+                </div>
+                <p>Emerged as one of the top-performing teams within the institution, presenting the complete system schema to an evaluation panel of distinguished IIT Alumni.</p>
+                <ul>
+                    <li>Constructed functional quantum gate emulations on an embedded system architecture utilizing combined networks of conventional logic gates to mirror physical qubit state transitions.</li>
+                    <li>Developed and deployed an interactive, Chrome-based web educational game designed to dynamically visualize quantum logic behaviors for student audiences.</li>
+                </ul>
+            </div>
+
+            <div class="project-card acc-pink">
+                <span class="card-num">04</span>
+                <h3>Generative AI Prompt Battle</h3>
+                <div class="tags">
+                    <span class="tag-pill">Prompt Engineering</span>
+                    <span class="tag-pill">LLM Workflows</span>
+                    <span class="tag-pill">System Automation</span>
+                </div>
+                <p>Competed in real-time constraint-driven arenas leveraging generative architectures to execute multi-layered asset production and error parsing.</p>
+                <ul>
+                    <li>Designed complex prompt routing mechanisms to output structured AI-based visual stories and automated product features.</li>
+                    <li>Developed procedural strategies to identify, repair, and reinforce structurally broken or unstable prompt templates under strict runtime conditions.</li>
+                </ul>
+            </div>
+
         </div>
+    </div>
+</section>
 
-        <div class="project">
-            <h3>FADEC Engine Simulation</h3>
-            <div class="tags">C++ | Embedded Control Systems | Fault Tolerance</div>
-            <p>A heavy systems simulation environment modeling real-time aerospace digital engine control dynamics.</p>
-            <ul>
-                <li>Modeled real-time internal engine telemetry loops and physical state variables.</li>
-                <li>Implemented a robust, fault-tolerant control architecture designed to switch safely to backup control states upon anomaly detection.</li>
-            </ul>
-            <p><a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank">View Repository →</a></p>
+<div class="stripe-divider"></div>
+
+<!-- ─── LEADERSHIP ───────────────────────────────────────────── -->
+<section id="leadership" class="section-tint">
+    <div class="section-block">
+        <div class="section-label orange">Engineering Leadership &amp; Experience</div>
+
+        <div class="leadership-grid">
+
+            <div class="lead-card">
+                <h3>Team Lead — Karnataka State Police Datathon</h3>
+                <div class="meta">2026 - Present</div>
+                <p>Directing a high-performance engineering cohort collaborating with the Karnataka State Police department. Leading architectural designs to integrate resilient AI pipelines and autonomous, tool-augmented Agentic workflows into official state law enforcement processing frameworks to minimize operational latency and eliminate human classification errors.</p>
+            </div>
+
+            <div class="lead-card">
+                <h3>Founder &amp; Lead, The Council</h3>
+                <div class="meta">2025 - Present</div>
+                <p>Founded and actively direct an elite 8-member engineering peer group dedicated to low-level engineering, systems optimization, and parallel language tracks across C++, Python, and Go.</p>
+            </div>
+
         </div>
+    </div>
+</section>
 
-        <h2>Hackathons & Technical Competitions</h2>
+<footer>
+    <span>Adarsh V H</span> · Systems &amp; Low-Latency Engineering · Bengaluru, India
+</footer>
 
-        <div class="project">
-            <h3>Smart India Hackathon (SIH) 2025</h3>
-            <div class="tags">Python | Flask | Database Normalization | Governance Tech</div>
-            <p>Cleared the competitive college-level selection round as one of the top-ranked teams to represent the institution at subsequent national tiers.</p>
-            <ul>
-                <li>Engineered a comprehensive Student ERP system mapped directly to a problem statement issued by the Jammu & Kashmir Government.</li>
-                <li>Designed features enabling students to seamlessly harmonize non-academic engagements with academic benchmarks through structured document filing and progress tracking tools.</li>
-            </ul>
-            <p><a href="https://github.com/adarsh-v-h/Student-ERP.git" target="_blank">View Repository →</a></p>
-        </div>
+<!-- ─── JAVASCRIPT ────────────────────────────────────────────── -->
+<script>
+    // ── Scroll progress bar ──────────────────────────────────────
+    const bar = document.getElementById('progress-bar');
+    function updateBar() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+    }
 
-        <div class="project">
-            <h3>PES University Cybersecurity Hackathon</h3>
-            <div class="tags">C | Network Programming | Packet Parsing | Pattern Entropy Analysis</div>
-            <p>Built a privacy-preserving network security tool tracking server load telemetry under zero-content visibility constraints.</p>
-            <ul>
-                <li>Developed an automated network Packet Analyzer targeting server infrastructure to detect anomaly patterns on raw interface pipelines.</li>
-                <li>Leveraged flow structural characteristics and statistical entropy calculations to seamlessly flag malicious or suspicious packet clusters without reading payload contents, preserving data privacy and execution speed.</li>
-            </ul>
-            <p><a href="https://github.com/adarsh-v-h/Packet-ANA.git" target="_blank">View Repository →</a></p>
-        </div>
+    // ── Active nav highlight ─────────────────────────────────────
+    const navLinks = document.querySelectorAll('#site-nav a');
+    const sections = ['hero','core-projects','hackathons','leadership']
+        .map(id => document.getElementById(id));
 
-        <div class="project">
-            <h3>IEEE Hardware & Simulation Competition</h3>
-            <div class="tags">Embedded Systems | Logic Gates | Digital Circuit Design | Web Dev</div>
-            <p>Emerged as one of the top-performing teams within the institution, presenting the complete system schema to an evaluation panel of distinguished IIT Alumni.</p>
-            <ul>
-                <li>Constructed functional quantum gate emulations on an embedded system architecture utilizing combined networks of conventional logic gates to mirror physical qubit state transitions.</li>
-                <li>Developed and deployed an interactive, Chrome-based web educational game designed to dynamically visualize quantum logic behaviors for student audiences.</li>
-            </ul>
-        </div>
+    function updateNav() {
+        const mid = window.scrollY + window.innerHeight * 0.4;
+        let current = sections[0];
+        for (const s of sections) {
+            if (s && s.offsetTop <= mid) current = s;
+        }
+        navLinks.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + (current ? current.id : ''));
+        });
+    }
 
-        <div class="project">
-            <h3>Generative AI Prompt Battle</h3>
-            <div class="tags">Prompt Engineering | LLM Workflows | System Automation</div>
-            <p>Competed in real-time constraint-driven arenas leveraging generative architectures to execute multi-layered asset production and error parsing.</p>
-            <ul>
-                <li>Designed complex prompt routing mechanisms to output structured AI-based visual stories and automated product features.</li>
-                <li>Developed procedural strategies to identify, repair, and reinforce structurally broken or unstable prompt templates under strict runtime conditions.</li>
-            </ul>
-        </div>
+    // ── Scroll-reveal with IntersectionObserver ──────────────────
+    const revealTargets = document.querySelectorAll('.project-card, .lead-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
 
-        <h2>Engineering Leadership & Experience</h2>
-        
-        <h3>Team Lead — Karnataka State Police Datathon</h3>
-        <p class="meta">2026 - Present</p>
-        <p>Directing a high-performance engineering cohort collaborating with the Karnataka State Police department. Leading architectural designs to integrate resilient AI pipelines and autonomous, tool-augmented Agentic workflows into official state law enforcement processing frameworks to minimize operational latency and eliminate human classification errors.</p>
+    revealTargets.forEach(el => observer.observe(el));
 
-        <h3>Founder & Lead, The Council</h3>
-        <p class="meta">2025 - Present</p>
-        <p>Founded and actively direct an elite 8-member engineering peer group dedicated to low-level engineering, systems optimization, and parallel language tracks across C++, Python, and Go.</p>
-    </main>
+    // ── Staggered delay for sibling cards ───────────────────────
+    document.querySelectorAll('.card-grid, .hack-grid, .leadership-grid').forEach(grid => {
+        [...grid.children].forEach((card, i) => {
+            card.style.transitionDelay = (i * 0.08) + 's';
+        });
+    });
+
+    // ── Unified scroll handler ───────────────────────────────────
+    window.addEventListener('scroll', () => {
+        updateBar();
+        updateNav();
+    }, { passive: true });
+
+    updateBar();
+    updateNav();
+</script>
 
 </body>
 </html>

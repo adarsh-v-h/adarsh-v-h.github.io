@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adarsh V H | Systems &amp; Low-Latency Engineering</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,6 +37,8 @@
     --accent-orange:        #dd5b00;
     --accent-teal:          #2a9d99;
     --accent-green:         #1aae39;
+    --accent-lime:          #84cc16;
+    --accent-lime-deep:     #22c55e;
 
     --r-xs:   4px;
     --r-sm:   5px;
@@ -64,6 +67,8 @@
         0 23px 52px rgba(0,0,0,0.05);
     --shadow-dark-1: 0 1px 2px rgba(0,0,0,0.25), 0 2px 10px rgba(0,0,0,0.35);
     --shadow-dark-2: 0 4px 12px rgba(0,0,0,0.4), 0 14px 36px rgba(0,0,0,0.55);
+
+    --max-w: 1440px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -112,9 +117,9 @@ body {
 }
 
 .nav-inner {
-    max-width: 1160px;
+    max-width: var(--max-w);
     margin: 0 auto;
-    padding: 0 var(--sp-md);
+    padding: 0 var(--sp-lg);
     height: 52px;
     display: flex;
     align-items: center;
@@ -223,9 +228,9 @@ body {
 .hero-inner {
     position: relative;
     z-index: 1;
-    max-width: 1160px;
+    max-width: var(--max-w);
     margin: 0 auto;
-    padding: 6rem var(--sp-md) 5rem;
+    padding: 6rem var(--sp-lg) 5rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -434,12 +439,15 @@ body {
 }
 
 .section-block {
-    max-width: 1160px;
+    max-width: var(--max-w);
     margin: 0 auto;
-    padding: 80px var(--sp-md);
+    padding: 80px var(--sp-lg);
 }
 
-.section-head { margin-bottom: 48px; }
+.section-head {
+    margin-bottom: 48px;
+    max-width: 720px;
+}
 
 .badge-pill {
     display: inline-flex;
@@ -473,6 +481,7 @@ body {
 .badge-dot-blue   { background: var(--accent-sky); }
 .badge-dot-purple { background: var(--accent-purple); }
 .badge-dot-teal   { background: var(--accent-teal); }
+.badge-dot-lime   { background: var(--accent-lime); }
 
 .section-title {
     font-size: clamp(28px, 5vw, 40px);
@@ -489,7 +498,7 @@ body {
     font-weight: 400;
     line-height: 1.5;
     color: var(--ink-muted);
-    max-width: 520px;
+    max-width: 560px;
 }
 .section-dark .section-sub { color: rgba(255,255,255,0.55); }
 
@@ -499,31 +508,37 @@ body {
 ═══════════════════════════════════════════════════════════════ */
 .masonry {
     column-count: 3;
-    column-gap: 20px;
+    column-gap: 24px;
 }
 
-.masonry-hackathons {
-    column-count: 2;
+.hackathon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
 }
 
 .masonry > .feature-card,
-.masonry-hackathons > .feature-card {
+.hackathon-grid > .feature-card {
     break-inside: avoid;
     -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     display: inline-block;
     width: 100%;
     vertical-align: top;
 }
 
-@media (max-width: 1024px) {
-    .masonry,
-    .masonry-hackathons { column-count: 2; }
+@media (max-width: 1180px) {
+    .masonry { column-count: 2; }
 }
-@media (max-width: 640px) {
-    .masonry,
-    .masonry-hackathons { column-count: 1; }
+@media (max-width: 720px) {
+    .masonry { column-count: 1; }
+}
+
+@media (max-width: 900px) {
+    .hackathon-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -561,6 +576,7 @@ body {
 .band-orange { background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink)); }
 .band-teal   { background: linear-gradient(90deg, var(--accent-teal), var(--accent-green)); }
 .band-purple { background: linear-gradient(90deg, var(--accent-purple-deep), var(--accent-purple)); }
+.band-lime   { background: linear-gradient(90deg, var(--accent-lime), var(--accent-lime-deep)); }
 
 .card-num {
     font-size: 12px;
@@ -666,8 +682,8 @@ body {
 ═══════════════════════════════════════════════════════════════ */
 .leadership-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 24px;
 }
 
 .lead-card {
@@ -734,12 +750,12 @@ body {
 footer {
     background: var(--surface-darker);
     border-top: 1px solid rgba(255,255,255,0.08);
-    padding: var(--sp-xxl) var(--sp-md);
+    padding: var(--sp-xxl) var(--sp-lg);
     color: rgba(255,255,255,0.6);
 }
 
 .footer-inner {
-    max-width: 1160px;
+    max-width: var(--max-w);
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
@@ -811,8 +827,9 @@ footer {
     .hero-stats { max-width: 100%; }
 }
 
-@media (min-width: 1200px) {
-    .section-block { padding: 96px var(--sp-lg); }
+/* Ultrawide — give the content more room to breathe */
+@media (min-width: 1800px) {
+    :root { --max-w: 1680px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -884,7 +901,7 @@ footer {
 
         <div class="hero-stats">
             <div class="stat">
-                <div class="stat-num">8</div>
+                <div class="stat-num">9</div>
                 <div class="stat-label">Projects Shipped</div>
             </div>
             <div class="stat">
@@ -919,14 +936,14 @@ footer {
                 Technical Work
             </div>
             <h2 class="section-title">Technical Core Projects</h2>
-            <p class="section-sub">Close-to-the-metal engineering — from ARM intrinsics to sub-microsecond order matching.</p>
+            <p class="section-sub">Systems engineering and end-to-end ML — from ARM intrinsics to rating prediction and sub-microsecond matching.</p>
         </div>
 
         <div class="masonry">
 
             <div class="feature-card">
                 <div class="card-band band-sky"></div>
-                <span class="card-num">01 / 04</span>
+                <span class="card-num">01 / 05</span>
                 <h3>navexa ARMv8-A Library</h3>
                 <div class="tags">
                     <span class="tag-pill">C++20</span>
@@ -949,7 +966,7 @@ footer {
 
             <div class="feature-card">
                 <div class="card-band band-orange"></div>
-                <span class="card-num">02 / 04</span>
+                <span class="card-num">02 / 05</span>
                 <h3>High-Performance Limit Order Book</h3>
                 <div class="tags">
                     <span class="tag-pill">Modern C++</span>
@@ -974,7 +991,7 @@ footer {
 
             <div class="feature-card">
                 <div class="card-band band-teal"></div>
-                <span class="card-num">03 / 04</span>
+                <span class="card-num">03 / 05</span>
                 <h3>Themis's Domain — Crime Record Management System</h3>
                 <div class="tags">
                     <span class="tag-pill">Flask</span>
@@ -999,7 +1016,7 @@ footer {
 
             <div class="feature-card">
                 <div class="card-band band-purple"></div>
-                <span class="card-num">04 / 04</span>
+                <span class="card-num">04 / 05</span>
                 <h3>FADEC Engine Simulation</h3>
                 <div class="tags">
                     <span class="tag-pill">C++</span>
@@ -1014,6 +1031,29 @@ footer {
                     <li>Built watchdog-based health checks to validate every control transition before commit, mirroring certified FADEC behaviour.</li>
                 </ul>
                 <a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-band band-lime"></div>
+                <span class="card-num">05 / 05</span>
+                <h3>Restaurant Rating &amp; Insights</h3>
+                <div class="tags">
+                    <span class="tag-pill">Python</span>
+                    <span class="tag-pill">scikit-learn</span>
+                    <span class="tag-pill">SHAP</span>
+                    <span class="tag-pill">EDA</span>
+                    <span class="tag-pill">Recommender Systems</span>
+                </div>
+                <p>An end-to-end ML pipeline on a 9.5k-row restaurant dataset — covering EDA, feature engineering, rating prediction, content-based recommendation, cuisine classification, and SHAP model explainability.</p>
+                <ul>
+                    <li>Engineered 53 numeric features from 9.5k raw restaurant rows and tuned a RandomForest rating regressor to R² 0.626 (MAE 0.26) via RandomizedSearchCV.</li>
+                    <li>Built a content-based recommender using scaled-feature cosine similarity, returning realistic top-5 matches per query.</li>
+                    <li>Trained a multiclass cuisine classifier (RandomForest, ~24% weighted F1) and explained rating predictions with SHAP summary and force plots.</li>
+                </ul>
+                <a href="https://github.com/adarsh-v-h/Restaurant-Data-Analysis.git" target="_blank" class="repo-btn">
                     View Repository
                     <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
@@ -1037,7 +1077,7 @@ footer {
             <p class="section-sub">Real-world constraints, real-world builds — under pressure and on deadline.</p>
         </div>
 
-        <div class="masonry masonry-hackathons">
+        <div class="hackathon-grid">
 
             <div class="feature-card">
                 <div class="card-band band-sky"></div>

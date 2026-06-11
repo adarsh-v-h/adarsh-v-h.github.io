@@ -4,644 +4,948 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adarsh V H | Systems & Low-Latency Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ─── RESET ────────────────────────────────────────────────── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg:       #0d0d0f;
-            --surface:  #141416;
-            --yellow:   #facc15;
-            --blue:     #38bdf8;
-            --orange:   #f97316;
-            --green:    #4ade80;
-            --pink:     #f472b6;
-            --white:    #f1f5f9;
-            --muted:    #64748b;
-            --K:        #000000;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--white);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        ::selection { background: var(--yellow); color: var(--K); }
-
-        /* ─── SCROLL PROGRESS BAR ──────────────────────────────────── */
-        #progress-bar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 4px;
-            width: 0%;
-            background: linear-gradient(90deg, var(--yellow), var(--orange), var(--pink));
-            z-index: 9999;
-            transition: width 0.1s linear;
-            border-bottom: 2px solid var(--K);
-        }
-
-        /* ─── STICKY NAV ───────────────────────────────────────────── */
-        #site-nav {
-            position: fixed;
-            top: 4px; left: 0; right: 0;
-            z-index: 999;
-            display: flex;
-            justify-content: center;
-            pointer-events: none;
-            padding-top: 12px;
-        }
-
-        #site-nav ul {
-            list-style: none;
-            display: flex;
-            gap: 0;
-            border: 3px solid var(--K);
-            box-shadow: 4px 4px 0 var(--K);
-            overflow: hidden;
-            pointer-events: all;
-            background: var(--K);
-        }
-
-        #site-nav ul li a {
-            display: block;
-            padding: 0.4rem 1.1rem;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--white);
-            text-decoration: none;
-            background: var(--K);
-            border-right: 2px solid #222;
-            transition: background 0.12s, color 0.12s;
-        }
-
-        #site-nav ul li:last-child a { border-right: none; }
-
-        #site-nav ul li a:hover,
-        #site-nav ul li a.active {
-            background: var(--yellow);
-            color: var(--K);
-        }
-
-        /* ─── HERO ─────────────────────────────────────────────────── */
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 8rem 2rem 4rem;
-            max-width: 960px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-family: monospace;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--orange);
-            margin-bottom: 1.2rem;
-        }
-
-        .hero-eyebrow::before {
-            content: '';
-            display: inline-block;
-            width: 32px;
-            height: 3px;
-            background: var(--orange);
-        }
-
-        .hero-name {
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            line-height: 0.92;
-            letter-spacing: -0.04em;
-            text-transform: uppercase;
-            color: var(--white);
-            margin-bottom: 1rem;
-        }
-
-        .hero-name .accent-word {
-            color: var(--yellow);
-            display: inline-block;
-            position: relative;
-        }
-
-        /* The big underline stroke under "V H" */
-        .hero-name .accent-word::after {
-            content: '';
-            position: absolute;
-            left: 0; right: 0;
-            bottom: 4px;
-            height: 6px;
-            background: var(--yellow);
-        }
-
-        .hero-tagline {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: var(--muted);
-            max-width: 540px;
-            margin-bottom: 2.5rem;
-            line-height: 1.7;
-        }
-
-        /* Contact pills */
-        .contact-list {
-            list-style: none;
-            padding-left: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 3rem;
-        }
-
-        .contact-list li a {
-            display: inline-block;
-            padding: 0.5rem 1.2rem;
-            background: var(--yellow);
-            color: var(--K);
-            font-weight: 800;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            text-decoration: none;
-            border: 3px solid var(--K);
-            box-shadow: 4px 4px 0 var(--K);
-            transition: transform 0.12s, box-shadow 0.12s;
-        }
-
-        .contact-list li a:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0 var(--K);
-        }
-
-        /* Big hero stat strip */
-        .hero-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0;
-            border: 3px solid var(--K);
-            box-shadow: 6px 6px 0 var(--K);
-            overflow: hidden;
-            max-width: 560px;
-        }
-
-        .stat {
-            flex: 1 1 140px;
-            padding: 1rem 1.25rem;
-            background: var(--surface);
-            border-right: 3px solid var(--K);
-        }
-
-        .stat:last-child { border-right: none; }
-
-        .stat-num {
-            font-size: 1.9rem;
-            font-weight: 900;
-            color: var(--yellow);
-            line-height: 1;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .stat-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--muted);
-            margin-top: 0.2rem;
-        }
-
-        /* ─── SCROLL INDICATOR ─────────────────────────────────────── */
-        .scroll-hint {
-            position: absolute;
-            bottom: 2.5rem;
-            left: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            animation: bounce-hint 2s ease-in-out infinite;
-        }
-
-        .scroll-hint::before {
-            content: '↓';
-            font-size: 1rem;
-            color: var(--orange);
-        }
-
-        @keyframes bounce-hint {
-            0%, 100% { transform: translateY(0); opacity: 0.6; }
-            50% { transform: translateY(6px); opacity: 1; }
-        }
-
-        /* ─── SECTION WRAPPER ──────────────────────────────────────── */
-        .section-block {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 5rem 2rem;
-        }
-
-        /* ─── SECTION LABEL ────────────────────────────────────────── */
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.72rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--K);
-            background: var(--yellow);
-            padding: 0.45rem 1rem;
-            border: 3px solid var(--K);
-            box-shadow: 4px 4px 0 var(--K);
-            margin-bottom: 2.5rem;
-        }
-
-        .section-label.blue   { background: var(--blue); }
-        .section-label.orange { background: var(--orange); }
-        .section-label.green  { background: var(--green); }
-        .section-label.pink   { background: var(--pink); }
-
-        /* ─── DIVIDER STRIPE ───────────────────────────────────────── */
-        .stripe-divider {
-            height: 6px;
-            width: 100%;
-            background: repeating-linear-gradient(
-                90deg,
-                var(--yellow) 0 28px, var(--K) 28px 32px,
-                var(--orange) 32px 60px, var(--K) 60px 64px,
-                var(--blue) 64px 92px, var(--K) 92px 96px,
-                var(--green) 96px 124px, var(--K) 124px 128px
-            );
-            border-top: 3px solid var(--K);
-            border-bottom: 3px solid var(--K);
-        }
-
-        /* ─── PROJECT CARDS ────────────────────────────────────────── */
-        .card-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.75rem;
-        }
-
-        .project-card {
-            background: var(--surface);
-            border: 3px solid var(--K);
-            box-shadow: 6px 6px 0 var(--K);
-            padding: 1.75rem;
-            position: relative;
-            transition: transform 0.15s, box-shadow 0.15s;
-
-            /* scroll-reveal — starts hidden */
-            opacity: 0;
-            transform: translateY(32px);
-        }
-
-        .project-card.revealed {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.15s, box-shadow 0.15s;
-        }
-
-        .project-card:hover {
-            transform: translate(-3px, -3px);
-            box-shadow: 9px 9px 0 var(--K);
-        }
-
-        /* Accent top bar */
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: -3px; left: -3px; right: -3px;
-            height: 5px;
-        }
-
-        .project-card.acc-yellow::before { background: var(--yellow); }
-        .project-card.acc-orange::before { background: var(--orange); }
-        .project-card.acc-blue::before   { background: var(--blue); }
-        .project-card.acc-green::before  { background: var(--green); }
-        .project-card.acc-pink::before   { background: var(--pink); }
-
-        /* Card number badge */
-        .card-num {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            font-family: monospace;
-            font-size: 0.7rem;
-            font-weight: 900;
-            color: var(--muted);
-            letter-spacing: 0.06em;
-        }
-
-        /* Card title */
-        .project-card h3 {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.01em;
-            color: var(--white);
-            margin-bottom: 0.6rem;
-            padding-right: 3rem;
-            line-height: 1.2;
-        }
-
-        /* Tags */
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            margin-bottom: 1rem;
-        }
-
-        .tag-pill {
-            font-family: monospace;
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 0.18rem 0.5rem;
-            border: 2px solid var(--K);
-            box-shadow: 2px 2px 0 var(--K);
-        }
-
-        .project-card.acc-yellow .tag-pill { background: var(--yellow); color: var(--K); }
-        .project-card.acc-orange .tag-pill { background: var(--orange); color: var(--K); }
-        .project-card.acc-blue .tag-pill   { background: var(--blue);   color: var(--K); }
-        .project-card.acc-green .tag-pill  { background: var(--green);  color: var(--K); }
-        .project-card.acc-pink .tag-pill   { background: var(--pink);   color: var(--K); }
-
-        .project-card p {
-            font-size: 0.88rem;
-            color: var(--muted);
-            margin-bottom: 0.9rem;
-            line-height: 1.65;
-        }
-
-        .project-card ul {
-            padding-left: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .project-card li {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 0.45rem;
-            line-height: 1.6;
-        }
-
-        .project-card li strong { color: var(--white); font-weight: 700; }
-
-        .project-card li code {
-            font-family: monospace;
-            font-size: 0.78rem;
-            background: rgba(56,189,248,0.1);
-            color: var(--blue);
-            padding: 0.1rem 0.3rem;
-            border: 1px solid rgba(56,189,248,0.3);
-        }
-
-        .project-card li a {
-            color: var(--blue);
-            font-weight: 700;
-            text-decoration: underline;
-            text-decoration-thickness: 2px;
-            text-underline-offset: 3px;
-        }
-
-        .project-card li a:hover { color: var(--yellow); }
-
-        /* Repo button */
-        .repo-btn {
-            display: inline-block;
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--K);
-            background: var(--white);
-            padding: 0.4rem 1rem;
-            border: 2px solid var(--K);
-            box-shadow: 3px 3px 0 var(--K);
-            text-decoration: none;
-            transition: transform 0.12s, box-shadow 0.12s;
-            margin-top: 0.25rem;
-        }
-
-        .project-card.acc-yellow .repo-btn { background: var(--yellow); }
-        .project-card.acc-orange .repo-btn { background: var(--orange); }
-        .project-card.acc-blue   .repo-btn { background: var(--blue); }
-        .project-card.acc-green  .repo-btn { background: var(--green); }
-        .project-card.acc-pink   .repo-btn { background: var(--pink); }
-
-        .repo-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 5px 5px 0 var(--K);
-        }
-
-        /* ─── HACKATHON CARDS (2-col on desktop) ───────────────────── */
-        .hack-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* ─── LEADERSHIP BLOCK ─────────────────────────────────────── */
-        .leadership-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .lead-card {
-            border: 3px solid var(--K);
-            box-shadow: 6px 6px 0 var(--K);
-            padding: 1.5rem;
-            background: var(--surface);
-            position: relative;
-            opacity: 0;
-            transform: translateY(24px);
-        }
-
-        .lead-card.revealed {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .lead-card::before {
-            content: '';
-            position: absolute;
-            top: -3px; left: -3px; right: -3px;
-            height: 5px;
-        }
-
-        .lead-card:nth-child(1)::before { background: var(--orange); }
-        .lead-card:nth-child(2)::before { background: var(--pink); }
-
-        .lead-card h3 {
-            font-size: 1rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            color: var(--white);
-            margin-bottom: 0.2rem;
-        }
-
-        .lead-card .meta {
-            font-size: 0.68rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--orange);
-            margin-bottom: 0.7rem;
-        }
-
-        .lead-card p {
-            font-size: 0.85rem;
-            color: var(--muted);
-            line-height: 1.65;
-        }
-
-        /* ─── SCROLL-REVEAL ANIMATION DELAYS ───────────────────────── */
-        .project-card:nth-child(1) { transition-delay: 0.05s; }
-        .project-card:nth-child(2) { transition-delay: 0.12s; }
-        .project-card:nth-child(3) { transition-delay: 0.19s; }
-        .project-card:nth-child(4) { transition-delay: 0.26s; }
-
-        /* ─── SECTION BG ALTERNATION ───────────────────────────────── */
-        .section-dark  { background: var(--bg); }
-        .section-tint  { background: #111113; }
-
-        /* ─── FOOTER ───────────────────────────────────────────────── */
-        footer {
-            border-top: 3px solid var(--K);
-            padding: 2rem;
-            text-align: center;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            background: var(--surface);
-        }
-
-        footer span { color: var(--yellow); }
-
-        /* ─── SCROLLBAR ────────────────────────────────────────────── */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--yellow); border: 2px solid var(--K); }
-
-        /* ─── RESPONSIVE ───────────────────────────────────────────── */
-        @media (max-width: 768px) {
-            .section-block { padding: 3.5rem 1.25rem; }
-            .hack-grid, .leadership-grid { grid-template-columns: 1fr; }
-            #hero { padding: 7rem 1.25rem 3rem; }
-            #site-nav ul li a { padding: 0.4rem 0.7rem; font-size: 0.62rem; }
-        }
-
-        @media (max-width: 480px) {
-            .section-block { padding: 2.5rem 1rem; }
-            #hero { padding: 6rem 1rem 2.5rem; }
-            .project-card, .lead-card { padding: 1.25rem 1rem; box-shadow: 4px 4px 0 var(--K); }
-            .project-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--K); }
-            .hero-stats { max-width: 100%; }
-            .stat { padding: 0.75rem 0.9rem; }
-            .stat-num { font-size: 1.5rem; }
-            #site-nav ul li a { padding: 0.35rem 0.55rem; font-size: 0.58rem; letter-spacing: 0.06em; }
-        }
-
-        @media (min-width: 1200px) {
-            .section-block { max-width: 1080px; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .project-card, .lead-card {
-                opacity: 1 !important;
-                transform: none !important;
-                transition: box-shadow 0.15s !important;
-            }
-            .scroll-hint { animation: none; }
-        }
+
+/* ═══════════════════════════════════════════════════════════════
+   NOTION DESIGN SYSTEM TOKENS  (from DESIGN.md)
+═══════════════════════════════════════════════════════════════ */
+:root {
+    /* Colors */
+    --primary:              #0075de;
+    --primary-active:       #005bab;
+    --secondary:            #213183;   /* dark indigo hero */
+    --on-primary:           #ffffff;
+    --canvas:               #ffffff;
+    --canvas-soft:          #f6f5f4;   /* warm paper — page background */
+    --surface:              #ffffff;
+    --ink:                  #000000;
+    --ink-secondary:        #31302e;
+    --ink-muted:            #615d59;
+    --ink-faint:            #a39e98;
+    --hairline:             #e6e6e6;
+
+    /* Sticker / accent palette — decoration only, never structural CTAs */
+    --accent-sky:           #62aef0;
+    --accent-purple:        #d6b6f6;
+    --accent-purple-deep:   #391c57;
+    --accent-pink:          #ff64c8;
+    --accent-orange:        #dd5b00;
+    --accent-orange-deep:   #793400;
+    --accent-teal:          #2a9d99;
+    --accent-green:         #1aae39;
+    --accent-brown:         #523410;
+
+    /* Border Radius */
+    --r-xs:   4px;
+    --r-sm:   5px;
+    --r-md:   8px;
+    --r-lg:   12px;
+    --r-xl:   16px;
+    --r-full: 9999px;
+
+    /* Spacing */
+    --sp-xxs: 4px;
+    --sp-xs:  8px;
+    --sp-sm:  12px;
+    --sp-md:  16px;
+    --sp-lg:  24px;
+    --sp-xl:  28px;
+    --sp-xxl: 32px;
+
+    /* Elevation — barely-there layered shadows */
+    --shadow-1:
+        0 0.175px 1.041px rgba(0,0,0,0.01),
+        0 0.8px 2.925px rgba(0,0,0,0.02),
+        0 2.025px 7.847px rgba(0,0,0,0.027),
+        0 4px 18px rgba(0,0,0,0.04);
+    --shadow-2:
+        0 0.5px 2px rgba(0,0,0,0.01),
+        0 2px 6px rgba(0,0,0,0.02),
+        0 6px 18px rgba(0,0,0,0.035),
+        0 14px 36px rgba(0,0,0,0.045),
+        0 23px 52px rgba(0,0,0,0.05);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--canvas-soft);   /* warm paper canvas */
+    color: var(--ink);
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "lnum" 1, "locl" 1;
+}
+
+::selection { background: #bee3fb; color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL PROGRESS  (thin primary-blue line — single accent)
+═══════════════════════════════════════════════════════════════ */
+#progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--primary);
+    z-index: 9999;
+    transition: width 0.1s linear;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV BAR  — nav-bar component
+   White canvas, body-sm text, sticky
+═══════════════════════════════════════════════════════════════ */
+#site-nav {
+    position: fixed;
+    top: 3px; left: 0; right: 0;
+    z-index: 900;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.nav-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 var(--sp-md);
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-lg);
+}
+
+.nav-wordmark {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2px;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-links li a {
+    display: block;
+    padding: 6px 12px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-radius: var(--r-sm);
+    transition: background 0.12s, color 0.12s;
+    white-space: nowrap;
+}
+
+.nav-links li a:hover { background: var(--canvas-soft); color: var(--ink); }
+
+.nav-links li a.active {
+    color: var(--primary);
+    background: rgba(0,117,222,0.07);
+    font-weight: 500;
+}
+
+/* button-utility — nav CTA */
+.btn-utility {
+    display: inline-block;
+    padding: 4px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.12s, box-shadow 0.12s;
+    flex-shrink: 0;
+}
+.btn-utility:hover { background: var(--canvas-soft); box-shadow: var(--shadow-1); }
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO BAND  — deep indigo "night" hero-band component
+   display-1 typography, white text, full-bleed
+═══════════════════════════════════════════════════════════════ */
+#hero {
+    background: var(--secondary);    /* #213183 deep indigo */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    padding: 52px 0 0;   /* offset for fixed nav */
+}
+
+/* Starfield / constellation texture behind hero */
+#hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,0.55) 0%, transparent 100%),
+        radial-gradient(1px 1px at 28% 68%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(2px 2px at 44% 14%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 58% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 72% 34%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 86% 56%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 20%, rgba(255,255,255,0.45) 0%, transparent 100%),
+        radial-gradient(2px 2px at 6% 88%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 36% 44%, rgba(255,255,255,0.25) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 66% 6%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 82% 92%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 52% 52%, rgba(255,255,255,0.2) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Subtle radial glow in hero */
+#hero::after {
+    content: '';
+    position: absolute;
+    top: -10%; left: 60%;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(98,174,240,0.14) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 6rem var(--sp-md) 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* badge-pill eyebrow on dark bg */
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.75);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: 0.125px;
+    padding: 4px 10px;
+    border-radius: var(--r-full);
+    border: 1px solid rgba(255,255,255,0.18);
+    margin-bottom: var(--sp-xl);
+}
+
+.hero-eyebrow .dot {
+    width: 6px; height: 6px;
+    border-radius: var(--r-full);
+    background: var(--accent-green);
+    display: inline-block;
+}
+
+/* display-1 — 64px / 700 / lh 1.0 / ls -2.125px */
+.hero-name {
+    font-size: clamp(2.8rem, 8vw, 64px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -2.125px;
+    color: var(--on-primary);
+    margin-bottom: var(--sp-lg);
+    max-width: 820px;
+}
+
+.hero-name .name-dim { opacity: 0.55; }
+
+/* body-md tagline */
+.hero-tagline {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin-bottom: var(--sp-xxl);
+}
+
+/* CTA row — button-primary + button-secondary */
+.hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 3.5rem;
+}
+
+/* button-primary */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--on-primary);
+    background: var(--primary);
+    border-radius: var(--r-full);
+    text-decoration: none;
+    border: none;
+    transition: background 0.12s, transform 0.1s;
+    cursor: pointer;
+}
+.btn-primary:hover { background: var(--primary-active); }
+.btn-primary:active { transform: scale(0.96); }
+
+/* button-secondary */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--surface);
+    border-radius: var(--r-full);
+    text-decoration: none;
+    box-shadow: var(--shadow-1);
+    transition: box-shadow 0.12s, transform 0.1s;
+}
+.btn-secondary:hover { box-shadow: var(--shadow-2); }
+.btn-secondary:active { transform: scale(0.96); }
+
+/* Stat strip — white elevated pill */
+.hero-stats {
+    display: inline-flex;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-2);
+}
+
+.stat {
+    padding: 14px 24px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+}
+.stat:last-child { border-right: none; }
+
+.stat-num {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.625px;
+    color: var(--on-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+    letter-spacing: 0.125px;
+}
+
+/* Sticker decoration blobs — decorative-only accent palette */
+.sticker {
+    position: absolute;
+    border-radius: var(--r-lg);
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
+}
+.sticker-1 {
+    width: 52px; height: 52px;
+    background: var(--accent-purple);
+    top: 18%; right: 22%;
+    transform: rotate(-12deg);
+    border-radius: var(--r-lg);
+    box-shadow: 0 4px 20px rgba(214,182,246,0.4);
+}
+.sticker-2 {
+    width: 36px; height: 36px;
+    background: var(--accent-pink);
+    top: 40%; right: 14%;
+    transform: rotate(8deg);
+    border-radius: var(--r-full);
+    box-shadow: 0 4px 16px rgba(255,100,200,0.4);
+}
+.sticker-3 {
+    width: 44px; height: 44px;
+    background: var(--accent-teal);
+    bottom: 28%; right: 30%;
+    transform: rotate(-5deg);
+    border-radius: var(--r-md);
+    box-shadow: 0 4px 18px rgba(42,157,153,0.4);
+}
+.sticker-4 {
+    width: 28px; height: 28px;
+    background: var(--accent-sky);
+    top: 28%; right: 38%;
+    transform: rotate(15deg);
+    border-radius: var(--r-sm);
+    box-shadow: 0 2px 12px rgba(98,174,240,0.4);
+}
+.sticker-5 {
+    width: 32px; height: 32px;
+    background: var(--accent-orange);
+    bottom: 18%; right: 18%;
+    transform: rotate(-20deg);
+    border-radius: var(--r-md);
+    box-shadow: 0 3px 14px rgba(221,91,0,0.35);
+}
+
+/* Scroll hint */
+.scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    z-index: 1;
+    animation: float-hint 2.4s ease-in-out infinite;
+}
+
+.scroll-hint svg {
+    opacity: 0.5;
+}
+
+@keyframes float-hint {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(7px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE SECTIONS
+═══════════════════════════════════════════════════════════════ */
+.section-canvas { background: var(--canvas-soft); }
+.section-white  { background: var(--canvas); }
+
+.section-block {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 80px var(--sp-md);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION HEADER  — heading-1 + badge-pill eyebrow
+═══════════════════════════════════════════════════════════════ */
+.section-head {
+    margin-bottom: 48px;
+}
+
+/* badge-pill — eyebrow component */
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: 0.125px;
+    padding: 4px 10px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--hairline);
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-1);
+}
+
+.badge-pill .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: var(--r-full);
+    display: inline-block;
+}
+.badge-dot-blue   { background: var(--accent-sky); }
+.badge-dot-purple { background: var(--accent-purple); }
+.badge-dot-teal   { background: var(--accent-teal); }
+
+/* heading-1 — 40px / 700 / lh 1.1 / ls -1px */
+.section-title {
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--ink);
+    margin-bottom: 12px;
+}
+
+/* body-md subtitle */
+.section-sub {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink-muted);
+    max-width: 520px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE CARDS  — feature-card + feature-card-elevated
+   White surface, hairline border, 12px radius, 24px padding
+═══════════════════════════════════════════════════════════════ */
+.card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.feature-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-lg);
+    padding: var(--sp-lg);
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.18s, transform 0.18s;
+
+    /* scroll-reveal — starts hidden */
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.feature-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.45s ease, transform 0.45s ease, box-shadow 0.18s;
+}
+
+.feature-card:hover {
+    box-shadow: var(--shadow-2);
+    transform: translateY(-2px);
+}
+
+/* Colour-blocked illustration band — sticker palette on card headers */
+.card-band {
+    height: 6px;
+    border-radius: var(--r-xs);
+    margin-bottom: var(--sp-md);
+    margin-left: calc(-1 * var(--sp-lg));
+    margin-right: calc(-1 * var(--sp-lg));
+    margin-top: calc(-1 * var(--sp-lg));
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.band-sky    { background: linear-gradient(90deg, var(--accent-sky), var(--accent-purple)); }
+.band-orange { background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink)); }
+.band-teal   { background: linear-gradient(90deg, var(--accent-teal), var(--accent-green)); }
+.band-purple { background: linear-gradient(90deg, var(--accent-purple-deep), var(--accent-purple)); }
+
+/* Card number — eyebrow style */
+.card-num {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.125px;
+    color: var(--ink-faint);
+    margin-bottom: var(--sp-xs);
+    display: block;
+}
+
+/* heading-3 card title — 22px / 700 / lh 1.27 / ls -0.25px */
+.feature-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.27;
+    letter-spacing: -0.25px;
+    color: var(--ink);
+    margin-bottom: var(--sp-sm);
+    padding-right: 0;
+}
+
+/* Tags */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--sp-md);
+}
+
+/* tag chips — rounded.xs (4px), hairline border */
+.tag-pill {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.125px;
+    color: var(--ink-secondary);
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-xs);
+    padding: 2px 8px;
+    line-height: 1.4;
+}
+
+/* body-md card description */
+.feature-card > p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink-muted);
+    margin-bottom: var(--sp-md);
+}
+
+.feature-card ul {
+    padding-left: 18px;
+    margin-bottom: var(--sp-md);
+}
+
+.feature-card li {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink-secondary);
+    margin-bottom: 6px;
+}
+
+.feature-card li strong {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+/* inline code */
+.feature-card li code {
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 12px;
+    background: var(--canvas-soft);
+    color: var(--ink-secondary);
+    padding: 1px 5px;
+    border-radius: var(--r-xs);
+    border: 1px solid var(--hairline);
+}
+
+/* inline links — primary blue only */
+.feature-card li a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0,117,222,0.3);
+    transition: border-color 0.12s;
+}
+.feature-card li a:hover { border-color: var(--primary); }
+
+/* Repo button — button-utility style */
+.repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary);
+    background: rgba(0,117,222,0.06);
+    border: 1px solid rgba(0,117,222,0.2);
+    border-radius: var(--r-md);
+    text-decoration: none;
+    transition: background 0.12s, border-color 0.12s;
+    margin-top: 4px;
+}
+.repo-btn:hover {
+    background: rgba(0,117,222,0.1);
+    border-color: rgba(0,117,222,0.35);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HACKATHON GRID — 2-up on desktop
+═══════════════════════════════════════════════════════════════ */
+.hack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEADERSHIP — elevated feature cards
+═══════════════════════════════════════════════════════════════ */
+.leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 16px;
+}
+
+.lead-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-lg);
+    padding: var(--sp-lg);
+    box-shadow: var(--shadow-1);  /* feature-card-elevated */
+    transition: box-shadow 0.18s, transform 0.18s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.lead-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.45s ease, transform 0.45s ease, box-shadow 0.18s;
+}
+
+.lead-card:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+
+/* title typography — 20px / 600 / ls -0.125px */
+.lead-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.125px;
+    color: var(--ink);
+    margin-bottom: 4px;
+}
+
+.lead-card .meta {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.125px;
+    color: var(--primary);
+    margin-bottom: var(--sp-sm);
+}
+
+.lead-card p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION HAIRLINE DIVIDER (between sections — no stripe)
+═══════════════════════════════════════════════════════════════ */
+.hairline-divider {
+    height: 1px;
+    background: var(--hairline);
+    margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER  — canvas-soft, caption typography
+═══════════════════════════════════════════════════════════════ */
+footer {
+    background: var(--canvas-soft);
+    border-top: 1px solid var(--hairline);
+    padding: var(--sp-xxl) var(--sp-md);
+}
+
+.footer-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-xxl);
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.footer-brand {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+}
+
+.footer-sub {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-faint);
+    line-height: 1.43;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-links a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-secondary);
+    text-decoration: none;
+    transition: color 0.12s;
+}
+.footer-links a:hover { color: var(--primary); }
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--canvas-soft); }
+::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 840px) {
+    .section-block { padding: 56px var(--sp-md); }
+    .hack-grid, .leadership-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-inner { padding: 4rem var(--sp-md) 3.5rem; }
+    .hero-stats { flex-wrap: wrap; border-radius: var(--r-lg); width: 100%; max-width: 480px; }
+    .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .stat:last-child { border-bottom: none; }
+    .sticker-1, .sticker-2, .sticker-3, .sticker-4, .sticker-5 { display: none; }
+}
+
+@media (max-width: 600px) {
+    .section-block { padding: 40px var(--sp-md); }
+    .hero-inner { padding: 3.5rem var(--sp-md) 3rem; }
+    .hero-name { letter-spacing: -1.5px; }
+    .hero-cta-row { flex-direction: column; }
+    .btn-primary, .btn-secondary { justify-content: center; }
+    .feature-card, .lead-card { padding: var(--sp-md); }
+    .footer-inner { flex-direction: column; gap: var(--sp-lg); }
+    .hero-stats { max-width: 100%; }
+}
+
+@media (min-width: 1200px) {
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .section-block { padding: 96px var(--sp-lg); }
+}
+
+@media (min-width: 1440px) {
+    .card-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .feature-card, .lead-card {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: box-shadow 0.18s !important;
+    }
+    .scroll-hint { animation: none !important; }
+}
     </style>
 </head>
 <body>
 
-<!-- ─── SCROLL PROGRESS ──────────────────────────────────────── -->
+<!-- ── SCROLL PROGRESS ──────────────────────────────────────── -->
 <div id="progress-bar"></div>
 
-<!-- ─── STICKY NAV ──────────────────────────────────────────── -->
+<!-- ── NAV BAR ─────────────────────────────────────────────── -->
 <nav id="site-nav">
-    <ul>
-        <li><a href="#hero" class="active">Home</a></li>
-        <li><a href="#core-projects">Projects</a></li>
-        <li><a href="#hackathons">Hackathons</a></li>
-        <li><a href="#leadership">Leadership</a></li>
-    </ul>
+    <div class="nav-inner">
+        <a href="#hero" class="nav-wordmark">Adarsh V H</a>
+        <ul class="nav-links">
+            <li><a href="#hero" class="active">Home</a></li>
+            <li><a href="#core-projects">Projects</a></li>
+            <li><a href="#hackathons">Hackathons</a></li>
+            <li><a href="#leadership">Leadership</a></li>
+        </ul>
+        <a href="mailto:adarshvh2005@gmail.com" class="btn-utility">Get in touch</a>
+    </div>
 </nav>
 
-<!-- ─── HERO ────────────────────────────────────────────────── -->
-<section id="hero" class="section-dark">
-    <div style="max-width:960px; margin:0 auto; padding:8rem 2rem 4rem; position:relative;">
-        <div class="hero-eyebrow">CSE · Bengaluru, India · 2nd Year</div>
+<!-- ── HERO BAND ────────────────────────────────────────────── -->
+<section id="hero">
+    <!-- decorative stickers -->
+    <div class="sticker sticker-1"></div>
+    <div class="sticker sticker-2"></div>
+    <div class="sticker sticker-3"></div>
+    <div class="sticker sticker-4"></div>
+    <div class="sticker sticker-5"></div>
+
+    <div class="hero-inner">
+        <div class="hero-eyebrow">
+            <span class="dot"></span>
+            CSE · Bengaluru, India · 2nd Year
+        </div>
+
         <h1 class="hero-name">
-            Adarsh<br>
-            <span class="accent-word">V H</span>
+            Systems &amp; Low&#8209;Latency<br>
+            <span class="name-dim">Engineer.</span>
         </h1>
+
         <p class="hero-tagline">
             Second-year CSE student building close-to-the-metal software. Focused on Modern C++, memory management, performance engineering, and hardware-software co-design.
         </p>
-        <ul class="contact-list">
-            <li><a href="mailto:adarshvh2005@gmail.com">Email</a></li>
-            <li><a href="https://github.com/adarsh-v-h" target="_blank">GitHub</a></li>
-            <li><a href="https://linkedin.com/in/adarsh-v-h-2005abc" target="_blank">LinkedIn</a></li>
-        </ul>
+
+        <div class="hero-cta-row">
+            <a href="#core-projects" class="btn-primary">
+                View projects
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="https://github.com/adarsh-v-h" target="_blank" class="btn-secondary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.09.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.03 1.532 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.748-1.025 2.748-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+            </a>
+            <a href="https://linkedin.com/in/adarsh-v-h-2005abc" target="_blank" class="btn-secondary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                LinkedIn
+            </a>
+        </div>
+
         <div class="hero-stats">
             <div class="stat">
                 <div class="stat-num">8</div>
-                <div class="stat-label">Council Members</div>
+                <div class="stat-label">Projects Shipped</div>
             </div>
             <div class="stat">
-                <div class="stat-num">28</div>
-                <div class="stat-label">Tests Passing</div>
+                <div class="stat-num">4</div>
+                <div class="stat-label">Hackathons Competed</div>
             </div>
             <div class="stat">
-                <div class="stat-num">1.77×</div>
-                <div class="stat-label">Throughput Gain</div>
+                <div class="stat-num">2</div>
+                <div class="stat-label">Active Leadership Roles</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">3+</div>
+                <div class="stat-label">Years in C / C++</div>
             </div>
         </div>
-        <div class="scroll-hint">Scroll to explore</div>
+    </div>
+
+    <div class="scroll-hint">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Scroll
     </div>
 </section>
 
-<div class="stripe-divider"></div>
+<div class="hairline-divider"></div>
 
-<!-- ─── CORE PROJECTS ────────────────────────────────────────── -->
-<section id="core-projects" class="section-tint">
+<!-- ── CORE PROJECTS ────────────────────────────────────────── -->
+<section id="core-projects" class="section-canvas">
     <div class="section-block">
-        <div class="section-label">Technical Core Projects</div>
+        <div class="section-head">
+            <div class="badge-pill">
+                <span class="badge-dot badge-dot-blue"></span>
+                Technical Work
+            </div>
+            <h2 class="section-title">Technical Core Projects</h2>
+            <p class="section-sub">Close-to-the-metal engineering — from ARM intrinsics to sub-microsecond order matching.</p>
+        </div>
 
         <div class="card-grid">
 
-            <div class="project-card acc-yellow">
-                <span class="card-num">01</span>
+            <div class="feature-card">
+                <div class="card-band band-sky"></div>
+                <span class="card-num">01 / 04</span>
                 <h3>navexa ARMv8-A Library</h3>
                 <div class="tags">
                     <span class="tag-pill">C++20</span>
@@ -656,11 +960,15 @@
                     <li>Cross-compiled for AArch64 architectures with full unit testing via Google Test and QEMU user-mode emulation.</li>
                     <li>Built an automated CI/CD pipeline ensuring strict compliance with low-level compilation and style standards.</li>
                 </ul>
-                <a href="https://github.com/adarsh-v-h/navexa.git" target="_blank" class="repo-btn">View Repository →</a>
+                <a href="https://github.com/adarsh-v-h/navexa.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
 
-            <div class="project-card acc-orange">
-                <span class="card-num">02</span>
+            <div class="feature-card">
+                <div class="card-band band-orange"></div>
+                <span class="card-num">02 / 04</span>
                 <h3>High-Performance Limit Order Book</h3>
                 <div class="tags">
                     <span class="tag-pill">Modern C++</span>
@@ -677,11 +985,15 @@
                     <li>Integrated a custom <a href="https://github.com/adarsh-v-h/Custom-Allocator.git" target="_blank">Data-Split Pool Allocator</a> utilizing a Structure of Arrays (SoA) layout and Hot/Cold static data splitting (packing 16-byte <code>OrderHot</code> data separately from 24-byte out-of-band <code>OrderCold</code> metadata).</li>
                     <li>Aligned allocations to native 64-byte hardware cache lines, pulling 4 hot records into L1 simultaneously for 100% cache line utilization, achieving a ~1.77x throughput speedup over standard system heap engines.</li>
                 </ul>
-                <a href="https://github.com/adarsh-v-h/Order_book.git" target="_blank" class="repo-btn">View Repository →</a>
+                <a href="https://github.com/adarsh-v-h/Order_book.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
 
-            <div class="project-card acc-blue">
-                <span class="card-num">03</span>
+            <div class="feature-card">
+                <div class="card-band band-teal"></div>
+                <span class="card-num">03 / 04</span>
                 <h3>Themis's Domain — Crime Record Management System</h3>
                 <div class="tags">
                     <span class="tag-pill">Flask</span>
@@ -698,11 +1010,15 @@
                     <li><strong>System Hardening &amp; Security:</strong> Built a strict role-based authorization mesh featuring single-device session tokens with rigid TTL constraints and hard revocation. Enforced parameterized SQL queries globally to eliminate injection vulnerabilities.</li>
                     <li><strong>Boundary Defense &amp; Hygiene:</strong> Protected public forms via Google reCAPTCHA v2 validation, rate-limited in-memory email OTP loops, and strict extension/size validation coupled with path-traversal guards on all evidence file upload streams. Hardened HTTP response pipelines with strict security headers (<code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>).</li>
                 </ul>
-                <a href="https://github.com/adarsh-v-h/Crime_DB.git" target="_blank" class="repo-btn">View Repository →</a>
+                <a href="https://github.com/adarsh-v-h/Crime_DB.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
 
-            <div class="project-card acc-green">
-                <span class="card-num">04</span>
+            <div class="feature-card">
+                <div class="card-band band-purple"></div>
+                <span class="card-num">04 / 04</span>
                 <h3>FADEC Engine Simulation</h3>
                 <div class="tags">
                     <span class="tag-pill">C++</span>
@@ -714,23 +1030,34 @@
                     <li>Modeled real-time internal engine telemetry loops and physical state variables.</li>
                     <li>Implemented a robust, fault-tolerant control architecture designed to switch safely to backup control states upon anomaly detection.</li>
                 </ul>
-                <a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank" class="repo-btn">View Repository →</a>
+                <a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
 
         </div>
     </div>
 </section>
 
-<div class="stripe-divider"></div>
+<div class="hairline-divider"></div>
 
-<!-- ─── HACKATHONS ───────────────────────────────────────────── -->
-<section id="hackathons" class="section-dark">
+<!-- ── HACKATHONS ───────────────────────────────────────────── -->
+<section id="hackathons" class="section-white">
     <div class="section-block">
-        <div class="section-label blue">Hackathons &amp; Technical Competitions</div>
+        <div class="section-head">
+            <div class="badge-pill">
+                <span class="badge-dot badge-dot-purple"></span>
+                Competitions
+            </div>
+            <h2 class="section-title">Hackathons &amp; Technical Competitions</h2>
+            <p class="section-sub">Real-world constraints, real-world builds — under pressure and on deadline.</p>
+        </div>
 
         <div class="hack-grid">
 
-            <div class="project-card acc-yellow">
+            <div class="feature-card">
+                <div class="card-band band-sky"></div>
                 <span class="card-num">01</span>
                 <h3>Smart India Hackathon (SIH) 2025</h3>
                 <div class="tags">
@@ -744,10 +1071,14 @@
                     <li>Engineered a comprehensive Student ERP system mapped directly to a problem statement issued by the Jammu &amp; Kashmir Government.</li>
                     <li>Designed features enabling students to seamlessly harmonize non-academic engagements with academic benchmarks through structured document filing and progress tracking tools.</li>
                 </ul>
-                <a href="https://github.com/adarsh-v-h/Student-ERP.git" target="_blank" class="repo-btn">View Repository →</a>
+                <a href="https://github.com/adarsh-v-h/Student-ERP.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
 
-            <div class="project-card acc-orange">
+            <div class="feature-card">
+                <div class="card-band band-orange"></div>
                 <span class="card-num">02</span>
                 <h3>PES University Cybersecurity Hackathon</h3>
                 <div class="tags">
@@ -761,10 +1092,14 @@
                     <li>Developed an automated network Packet Analyzer targeting server infrastructure to detect anomaly patterns on raw interface pipelines.</li>
                     <li>Leveraged flow structural characteristics and statistical entropy calculations to seamlessly flag malicious or suspicious packet clusters without reading payload contents, preserving data privacy and execution speed.</li>
                 </ul>
-                <a href="https://github.com/adarsh-v-h/Packet-ANA.git" target="_blank" class="repo-btn">View Repository →</a>
+                <a href="https://github.com/adarsh-v-h/Packet-ANA.git" target="_blank" class="repo-btn">
+                    View Repository
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
 
-            <div class="project-card acc-blue">
+            <div class="feature-card">
+                <div class="card-band band-teal"></div>
                 <span class="card-num">03</span>
                 <h3>IEEE Hardware &amp; Simulation Competition</h3>
                 <div class="tags">
@@ -780,7 +1115,8 @@
                 </ul>
             </div>
 
-            <div class="project-card acc-pink">
+            <div class="feature-card">
+                <div class="card-band band-purple"></div>
                 <span class="card-num">04</span>
                 <h3>Generative AI Prompt Battle</h3>
                 <div class="tags">
@@ -799,24 +1135,31 @@
     </div>
 </section>
 
-<div class="stripe-divider"></div>
+<div class="hairline-divider"></div>
 
-<!-- ─── LEADERSHIP ───────────────────────────────────────────── -->
-<section id="leadership" class="section-tint">
+<!-- ── LEADERSHIP ───────────────────────────────────────────── -->
+<section id="leadership" class="section-canvas">
     <div class="section-block">
-        <div class="section-label orange">Engineering Leadership &amp; Experience</div>
+        <div class="section-head">
+            <div class="badge-pill">
+                <span class="badge-dot badge-dot-teal"></span>
+                Experience
+            </div>
+            <h2 class="section-title">Engineering Leadership &amp; Experience</h2>
+            <p class="section-sub">Directing teams, setting technical direction, and shipping under real-world stakes.</p>
+        </div>
 
         <div class="leadership-grid">
 
             <div class="lead-card">
                 <h3>Team Lead — Karnataka State Police Datathon</h3>
-                <div class="meta">2026 - Present</div>
+                <div class="meta">2026 – Present</div>
                 <p>Directing a high-performance engineering cohort collaborating with the Karnataka State Police department. Leading architectural designs to integrate resilient AI pipelines and autonomous, tool-augmented Agentic workflows into official state law enforcement processing frameworks to minimize operational latency and eliminate human classification errors.</p>
             </div>
 
             <div class="lead-card">
                 <h3>Founder &amp; Lead, The Council</h3>
-                <div class="meta">2025 - Present</div>
+                <div class="meta">2025 – Present</div>
                 <p>Founded and actively direct an elite 8-member engineering peer group dedicated to low-level engineering, systems optimization, and parallel language tracks across C++, Python, and Go.</p>
             </div>
 
@@ -824,38 +1167,45 @@
     </div>
 </section>
 
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
 <footer>
-    <span>Adarsh V H</span> · Systems &amp; Low-Latency Engineering · Bengaluru, India
+    <div class="footer-inner">
+        <div>
+            <div class="footer-brand">Adarsh V H</div>
+            <div class="footer-sub">Systems &amp; Low-Latency Engineering · Bengaluru, India</div>
+        </div>
+        <div class="footer-links">
+            <a href="mailto:adarshvh2005@gmail.com">adarshvh2005@gmail.com</a>
+            <a href="https://github.com/adarsh-v-h" target="_blank">github.com/adarsh-v-h</a>
+            <a href="https://linkedin.com/in/adarsh-v-h-2005abc" target="_blank">LinkedIn</a>
+        </div>
+    </div>
 </footer>
 
-<!-- ─── JAVASCRIPT ────────────────────────────────────────────── -->
+<!-- ── JAVASCRIPT ────────────────────────────────────────────── -->
 <script>
-    // ── Scroll progress bar ──────────────────────────────────────
+    // Scroll progress bar
     const bar = document.getElementById('progress-bar');
     function updateBar() {
-        const scrolled = window.scrollY;
-        const total = document.documentElement.scrollHeight - window.innerHeight;
-        bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+        const t = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (t > 0 ? (window.scrollY / t) * 100 : 0) + '%';
     }
 
-    // ── Active nav highlight ─────────────────────────────────────
-    const navLinks = document.querySelectorAll('#site-nav a');
-    const sections = ['hero','core-projects','hackathons','leadership']
-        .map(id => document.getElementById(id));
+    // Active nav link
+    const navLinks = document.querySelectorAll('#site-nav .nav-links a');
+    const sectionIds = ['hero', 'core-projects', 'hackathons', 'leadership'];
+    const sections   = sectionIds.map(id => document.getElementById(id));
 
     function updateNav() {
-        const mid = window.scrollY + window.innerHeight * 0.4;
+        const mid = window.scrollY + window.innerHeight * 0.35;
         let current = sections[0];
-        for (const s of sections) {
-            if (s && s.offsetTop <= mid) current = s;
-        }
+        for (const s of sections) { if (s && s.offsetTop <= mid) current = s; }
         navLinks.forEach(a => {
-            a.classList.toggle('active', a.getAttribute('href') === '#' + (current ? current.id : ''));
+            a.classList.toggle('active', a.getAttribute('href') === '#' + (current?.id || ''));
         });
     }
 
-    // ── Scroll-reveal with IntersectionObserver ──────────────────
-    const revealTargets = document.querySelectorAll('.project-card, .lead-card');
+    // Scroll-reveal with IntersectionObserver
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -863,25 +1213,20 @@
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.08 });
+    }, { threshold: 0.07 });
 
-    revealTargets.forEach(el => observer.observe(el));
+    document.querySelectorAll('.feature-card, .lead-card').forEach(el => observer.observe(el));
 
-    // ── Staggered delay for sibling cards ───────────────────────
+    // Staggered delay per grid
     document.querySelectorAll('.card-grid, .hack-grid, .leadership-grid').forEach(grid => {
         [...grid.children].forEach((card, i) => {
-            card.style.transitionDelay = (i * 0.08) + 's';
+            card.style.transitionDelay = (i * 0.07) + 's';
         });
     });
 
-    // ── Unified scroll handler ───────────────────────────────────
-    window.addEventListener('scroll', () => {
-        updateBar();
-        updateNav();
-    }, { passive: true });
-
-    updateBar();
-    updateNav();
+    // Unified scroll handler
+    window.addEventListener('scroll', () => { updateBar(); updateNav(); }, { passive: true });
+    updateBar(); updateNav();
 </script>
 
 </body>

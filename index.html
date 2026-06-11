@@ -3,42 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adarsh V H | Systems & Low-Latency Engineering</title>
+    <title>Adarsh V H | Systems &amp; Low-Latency Engineering</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
 
 /* ═══════════════════════════════════════════════════════════════
-   NOTION DESIGN SYSTEM TOKENS  (from DESIGN.md)
+   DESIGN TOKENS
 ═══════════════════════════════════════════════════════════════ */
 :root {
-    /* Colors */
     --primary:              #0075de;
     --primary-active:       #005bab;
-    --secondary:            #213183;   /* dark indigo hero */
+    --secondary:            #213183;
     --on-primary:           #ffffff;
     --canvas:               #ffffff;
-    --canvas-soft:          #f6f5f4;   /* warm paper — page background */
+    --canvas-soft:          #f6f5f4;
     --surface:              #ffffff;
+    --surface-dark:         #16161a;
+    --surface-darker:       #0a0a0e;
     --ink:                  #000000;
     --ink-secondary:        #31302e;
     --ink-muted:            #615d59;
     --ink-faint:            #a39e98;
     --hairline:             #e6e6e6;
+    --hairline-dark:        rgba(255,255,255,0.10);
 
-    /* Sticker / accent palette — decoration only, never structural CTAs */
     --accent-sky:           #62aef0;
     --accent-purple:        #d6b6f6;
     --accent-purple-deep:   #391c57;
     --accent-pink:          #ff64c8;
     --accent-orange:        #dd5b00;
-    --accent-orange-deep:   #793400;
     --accent-teal:          #2a9d99;
     --accent-green:         #1aae39;
-    --accent-brown:         #523410;
 
-    /* Border Radius */
     --r-xs:   4px;
     --r-sm:   5px;
     --r-md:   8px;
@@ -46,8 +44,6 @@
     --r-xl:   16px;
     --r-full: 9999px;
 
-    /* Spacing */
-    --sp-xxs: 4px;
     --sp-xs:  8px;
     --sp-sm:  12px;
     --sp-md:  16px;
@@ -55,7 +51,6 @@
     --sp-xl:  28px;
     --sp-xxl: 32px;
 
-    /* Elevation — barely-there layered shadows */
     --shadow-1:
         0 0.175px 1.041px rgba(0,0,0,0.01),
         0 0.8px 2.925px rgba(0,0,0,0.02),
@@ -67,6 +62,8 @@
         0 6px 18px rgba(0,0,0,0.035),
         0 14px 36px rgba(0,0,0,0.045),
         0 23px 52px rgba(0,0,0,0.05);
+    --shadow-dark-1: 0 1px 2px rgba(0,0,0,0.25), 0 2px 10px rgba(0,0,0,0.35);
+    --shadow-dark-2: 0 4px 12px rgba(0,0,0,0.4), 0 14px 36px rgba(0,0,0,0.55);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -78,7 +75,7 @@ html { scroll-behavior: smooth; }
 
 body {
     font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
-    background: var(--canvas-soft);   /* warm paper canvas */
+    background: var(--canvas-soft);
     color: var(--ink);
     line-height: 1.5;
     overflow-x: hidden;
@@ -89,7 +86,7 @@ body {
 ::selection { background: #bee3fb; color: var(--ink); }
 
 /* ═══════════════════════════════════════════════════════════════
-   SCROLL PROGRESS  (thin primary-blue line — single accent)
+   SCROLL PROGRESS
 ═══════════════════════════════════════════════════════════════ */
 #progress-bar {
     position: fixed;
@@ -102,8 +99,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   NAV BAR  — nav-bar component
-   White canvas, body-sm text, sticky
+   NAV
 ═══════════════════════════════════════════════════════════════ */
 #site-nav {
     position: fixed;
@@ -157,14 +153,12 @@ body {
 }
 
 .nav-links li a:hover { background: var(--canvas-soft); color: var(--ink); }
-
 .nav-links li a.active {
     color: var(--primary);
     background: rgba(0,117,222,0.07);
     font-weight: 500;
 }
 
-/* button-utility — nav CTA */
 .btn-utility {
     display: inline-block;
     padding: 4px 14px;
@@ -182,21 +176,19 @@ body {
 .btn-utility:hover { background: var(--canvas-soft); box-shadow: var(--shadow-1); }
 
 /* ═══════════════════════════════════════════════════════════════
-   HERO BAND  — deep indigo "night" hero-band component
-   display-1 typography, white text, full-bleed
+   HERO
 ═══════════════════════════════════════════════════════════════ */
 #hero {
-    background: var(--secondary);    /* #213183 deep indigo */
+    background: var(--secondary);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
     position: relative;
-    padding: 52px 0 0;   /* offset for fixed nav */
+    padding: 52px 0 0;
 }
 
-/* Starfield / constellation texture behind hero */
 #hero::before {
     content: '';
     position: absolute;
@@ -218,7 +210,6 @@ body {
     z-index: 0;
 }
 
-/* Subtle radial glow in hero */
 #hero::after {
     content: '';
     position: absolute;
@@ -240,7 +231,6 @@ body {
     align-items: flex-start;
 }
 
-/* badge-pill eyebrow on dark bg */
 .hero-eyebrow {
     display: inline-flex;
     align-items: center;
@@ -264,7 +254,6 @@ body {
     display: inline-block;
 }
 
-/* display-1 — 64px / 700 / lh 1.0 / ls -2.125px */
 .hero-name {
     font-size: clamp(2.8rem, 8vw, 64px);
     font-weight: 700;
@@ -277,7 +266,6 @@ body {
 
 .hero-name .name-dim { opacity: 0.55; }
 
-/* body-md tagline */
 .hero-tagline {
     font-size: 16px;
     font-weight: 400;
@@ -287,7 +275,6 @@ body {
     margin-bottom: var(--sp-xxl);
 }
 
-/* CTA row — button-primary + button-secondary */
 .hero-cta-row {
     display: flex;
     flex-wrap: wrap;
@@ -295,7 +282,6 @@ body {
     margin-bottom: 3.5rem;
 }
 
-/* button-primary */
 .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -315,7 +301,6 @@ body {
 .btn-primary:hover { background: var(--primary-active); }
 .btn-primary:active { transform: scale(0.96); }
 
-/* button-secondary */
 .btn-secondary {
     display: inline-flex;
     align-items: center;
@@ -334,7 +319,6 @@ body {
 .btn-secondary:hover { box-shadow: var(--shadow-2); }
 .btn-secondary:active { transform: scale(0.96); }
 
-/* Stat strip — white elevated pill */
 .hero-stats {
     display: inline-flex;
     background: rgba(255,255,255,0.08);
@@ -368,7 +352,6 @@ body {
     letter-spacing: 0.125px;
 }
 
-/* Sticker decoration blobs — decorative-only accent palette */
 .sticker {
     position: absolute;
     border-radius: var(--r-lg);
@@ -381,7 +364,6 @@ body {
     background: var(--accent-purple);
     top: 18%; right: 22%;
     transform: rotate(-12deg);
-    border-radius: var(--r-lg);
     box-shadow: 0 4px 20px rgba(214,182,246,0.4);
 }
 .sticker-2 {
@@ -417,7 +399,6 @@ body {
     box-shadow: 0 3px 14px rgba(221,91,0,0.35);
 }
 
-/* Scroll hint */
 .scroll-hint {
     position: absolute;
     bottom: 2rem;
@@ -434,21 +415,23 @@ body {
     z-index: 1;
     animation: float-hint 2.4s ease-in-out infinite;
 }
-
-.scroll-hint svg {
-    opacity: 0.5;
-}
-
+.scroll-hint svg { opacity: 0.5; }
 @keyframes float-hint {
     0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(7px); }
+    50%      { transform: translateX(-50%) translateY(7px); }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PAGE SECTIONS
+   SECTION SCAFFOLD
 ═══════════════════════════════════════════════════════════════ */
 .section-canvas { background: var(--canvas-soft); }
 .section-white  { background: var(--canvas); }
+.section-dark   {
+    background: var(--surface-darker);
+    color: #f5f5f5;
+    border-top: 1px solid var(--hairline-dark);
+    border-bottom: 1px solid var(--hairline-dark);
+}
 
 .section-block {
     max-width: 1160px;
@@ -456,14 +439,8 @@ body {
     padding: 80px var(--sp-md);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SECTION HEADER  — heading-1 + badge-pill eyebrow
-═══════════════════════════════════════════════════════════════ */
-.section-head {
-    margin-bottom: 48px;
-}
+.section-head { margin-bottom: 48px; }
 
-/* badge-pill — eyebrow component */
 .badge-pill {
     display: inline-flex;
     align-items: center;
@@ -481,6 +458,13 @@ body {
     box-shadow: var(--shadow-1);
 }
 
+.section-dark .badge-pill {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.12);
+    color: var(--accent-sky);
+    box-shadow: none;
+}
+
 .badge-pill .badge-dot {
     width: 6px; height: 6px;
     border-radius: var(--r-full);
@@ -490,7 +474,6 @@ body {
 .badge-dot-purple { background: var(--accent-purple); }
 .badge-dot-teal   { background: var(--accent-teal); }
 
-/* heading-1 — 40px / 700 / lh 1.1 / ls -1px */
 .section-title {
     font-size: clamp(28px, 5vw, 40px);
     font-weight: 700;
@@ -499,8 +482,8 @@ body {
     color: var(--ink);
     margin-bottom: 12px;
 }
+.section-dark .section-title { color: #f5f5f5; }
 
-/* body-md subtitle */
 .section-sub {
     font-size: 16px;
     font-weight: 400;
@@ -508,17 +491,44 @@ body {
     color: var(--ink-muted);
     max-width: 520px;
 }
+.section-dark .section-sub { color: rgba(255,255,255,0.55); }
 
 /* ═══════════════════════════════════════════════════════════════
-   FEATURE CARDS  — feature-card + feature-card-elevated
-   White surface, hairline border, 12px radius, 24px padding
+   MASONRY LAYOUT  (Pinterest-style, pure CSS columns)
+   Varying card heights pack tightly with no big gaps.
 ═══════════════════════════════════════════════════════════════ */
-.card-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
+.masonry {
+    column-count: 3;
+    column-gap: 20px;
 }
 
+.masonry-hackathons {
+    column-count: 2;
+}
+
+.masonry > .feature-card,
+.masonry-hackathons > .feature-card {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+}
+
+@media (max-width: 1024px) {
+    .masonry,
+    .masonry-hackathons { column-count: 2; }
+}
+@media (max-width: 640px) {
+    .masonry,
+    .masonry-hackathons { column-count: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURE CARD
+═══════════════════════════════════════════════════════════════ */
 .feature-card {
     background: var(--surface);
     border: 1px solid var(--hairline);
@@ -526,9 +536,7 @@ body {
     padding: var(--sp-lg);
     position: relative;
     overflow: hidden;
-    transition: box-shadow 0.18s, transform 0.18s;
-
-    /* scroll-reveal — starts hidden */
+    transition: box-shadow 0.18s, transform 0.18s, opacity 0.45s ease;
     opacity: 0;
     transform: translateY(20px);
 }
@@ -536,7 +544,6 @@ body {
 .feature-card.revealed {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.45s ease, transform 0.45s ease, box-shadow 0.18s;
 }
 
 .feature-card:hover {
@@ -544,23 +551,17 @@ body {
     transform: translateY(-2px);
 }
 
-/* Colour-blocked illustration band — sticker palette on card headers */
+/* Color band — top accent strip */
 .card-band {
-    height: 6px;
-    border-radius: var(--r-xs);
-    margin-bottom: var(--sp-md);
-    margin-left: calc(-1 * var(--sp-lg));
-    margin-right: calc(-1 * var(--sp-lg));
-    margin-top: calc(-1 * var(--sp-lg));
+    height: 4px;
+    margin: -24px -24px 20px;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
 }
-
 .band-sky    { background: linear-gradient(90deg, var(--accent-sky), var(--accent-purple)); }
 .band-orange { background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink)); }
 .band-teal   { background: linear-gradient(90deg, var(--accent-teal), var(--accent-green)); }
 .band-purple { background: linear-gradient(90deg, var(--accent-purple-deep), var(--accent-purple)); }
 
-/* Card number — eyebrow style */
 .card-num {
     font-size: 12px;
     font-weight: 600;
@@ -570,7 +571,6 @@ body {
     display: block;
 }
 
-/* heading-3 card title — 22px / 700 / lh 1.27 / ls -0.25px */
 .feature-card h3 {
     font-size: 20px;
     font-weight: 700;
@@ -578,10 +578,8 @@ body {
     letter-spacing: -0.25px;
     color: var(--ink);
     margin-bottom: var(--sp-sm);
-    padding-right: 0;
 }
 
-/* Tags */
 .tags {
     display: flex;
     flex-wrap: wrap;
@@ -589,7 +587,6 @@ body {
     margin-bottom: var(--sp-md);
 }
 
-/* tag chips — rounded.xs (4px), hairline border */
 .tag-pill {
     font-size: 12px;
     font-weight: 500;
@@ -602,7 +599,6 @@ body {
     line-height: 1.4;
 }
 
-/* body-md card description */
 .feature-card > p {
     font-size: 15px;
     font-weight: 400;
@@ -624,12 +620,8 @@ body {
     margin-bottom: 6px;
 }
 
-.feature-card li strong {
-    font-weight: 600;
-    color: var(--ink);
-}
+.feature-card li strong { font-weight: 600; color: var(--ink); }
 
-/* inline code */
 .feature-card li code {
     font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
     font-size: 12px;
@@ -640,7 +632,6 @@ body {
     border: 1px solid var(--hairline);
 }
 
-/* inline links — primary blue only */
 .feature-card li a {
     color: var(--primary);
     text-decoration: none;
@@ -650,7 +641,6 @@ body {
 }
 .feature-card li a:hover { border-color: var(--primary); }
 
-/* Repo button — button-utility style */
 .repo-btn {
     display: inline-flex;
     align-items: center;
@@ -672,30 +662,20 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HACKATHON GRID — 2-up on desktop
-═══════════════════════════════════════════════════════════════ */
-.hack-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   LEADERSHIP — elevated feature cards
+   LEADERSHIP  (DARK section, glassy cards on near-black bg)
 ═══════════════════════════════════════════════════════════════ */
 .leadership-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 20px;
 }
 
 .lead-card {
-    background: var(--surface);
-    border: 1px solid var(--hairline);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: var(--r-lg);
     padding: var(--sp-lg);
-    box-shadow: var(--shadow-1);  /* feature-card-elevated */
-    transition: box-shadow 0.18s, transform 0.18s;
+    transition: background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s, opacity 0.45s ease;
     opacity: 0;
     transform: translateY(20px);
 }
@@ -703,26 +683,35 @@ body {
 .lead-card.revealed {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.45s ease, transform 0.45s ease, box-shadow 0.18s;
 }
 
-.lead-card:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.lead-card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.18);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-dark-2);
+}
 
-/* title typography — 20px / 600 / ls -0.125px */
 .lead-card h3 {
     font-size: 20px;
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: -0.125px;
-    color: var(--ink);
-    margin-bottom: 4px;
+    color: #f5f5f5;
+    margin-bottom: 6px;
 }
 
 .lead-card .meta {
+    display: inline-block;
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.125px;
-    color: var(--primary);
+    letter-spacing: 0.05em;
+    color: var(--accent-sky);
+    background: rgba(98,174,240,0.08);
+    border: 1px solid rgba(98,174,240,0.25);
+    border-radius: var(--r-xs);
+    padding: 2px 8px;
     margin-bottom: var(--sp-sm);
 }
 
@@ -730,11 +719,11 @@ body {
     font-size: 15px;
     font-weight: 400;
     line-height: 1.5;
-    color: var(--ink-muted);
+    color: rgba(255,255,255,0.65);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION HAIRLINE DIVIDER (between sections — no stripe)
+   HAIRLINE DIVIDER + FOOTER
 ═══════════════════════════════════════════════════════════════ */
 .hairline-divider {
     height: 1px;
@@ -742,13 +731,11 @@ body {
     margin: 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   FOOTER  — canvas-soft, caption typography
-═══════════════════════════════════════════════════════════════ */
 footer {
-    background: var(--canvas-soft);
-    border-top: 1px solid var(--hairline);
+    background: var(--surface-darker);
+    border-top: 1px solid rgba(255,255,255,0.08);
     padding: var(--sp-xxl) var(--sp-md);
+    color: rgba(255,255,255,0.6);
 }
 
 .footer-inner {
@@ -764,7 +751,7 @@ footer {
 .footer-brand {
     font-size: 15px;
     font-weight: 700;
-    color: var(--ink);
+    color: #f5f5f5;
     letter-spacing: -0.3px;
     margin-bottom: 4px;
 }
@@ -772,7 +759,7 @@ footer {
 .footer-sub {
     font-size: 14px;
     font-weight: 400;
-    color: var(--ink-faint);
+    color: rgba(255,255,255,0.45);
     line-height: 1.43;
 }
 
@@ -785,11 +772,11 @@ footer {
 .footer-links a {
     font-size: 14px;
     font-weight: 400;
-    color: var(--ink-secondary);
+    color: rgba(255,255,255,0.65);
     text-decoration: none;
     transition: color 0.12s;
 }
-.footer-links a:hover { color: var(--primary); }
+.footer-links a:hover { color: var(--accent-sky); }
 
 /* ═══════════════════════════════════════════════════════════════
    SCROLLBAR
@@ -804,7 +791,7 @@ footer {
 ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 840px) {
     .section-block { padding: 56px var(--sp-md); }
-    .hack-grid, .leadership-grid { grid-template-columns: 1fr; }
+    .leadership-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
     .hero-inner { padding: 4rem var(--sp-md) 3.5rem; }
     .hero-stats { flex-wrap: wrap; border-radius: var(--r-lg); width: 100%; max-width: 480px; }
@@ -825,12 +812,7 @@ footer {
 }
 
 @media (min-width: 1200px) {
-    .card-grid { grid-template-columns: 1fr 1fr; }
     .section-block { padding: 96px var(--sp-lg); }
-}
-
-@media (min-width: 1440px) {
-    .card-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -848,7 +830,7 @@ footer {
 <!-- ── SCROLL PROGRESS ──────────────────────────────────────── -->
 <div id="progress-bar"></div>
 
-<!-- ── NAV BAR ─────────────────────────────────────────────── -->
+<!-- ── NAV ──────────────────────────────────────────────────── -->
 <nav id="site-nav">
     <div class="nav-inner">
         <a href="#hero" class="nav-wordmark">Adarsh V H</a>
@@ -862,9 +844,8 @@ footer {
     </div>
 </nav>
 
-<!-- ── HERO BAND ────────────────────────────────────────────── -->
+<!-- ── HERO ─────────────────────────────────────────────────── -->
 <section id="hero">
-    <!-- decorative stickers -->
     <div class="sticker sticker-1"></div>
     <div class="sticker sticker-2"></div>
     <div class="sticker sticker-3"></div>
@@ -929,7 +910,7 @@ footer {
 
 <div class="hairline-divider"></div>
 
-<!-- ── CORE PROJECTS ────────────────────────────────────────── -->
+<!-- ── CORE PROJECTS (MASONRY) ──────────────────────────────── -->
 <section id="core-projects" class="section-canvas">
     <div class="section-block">
         <div class="section-head">
@@ -941,7 +922,7 @@ footer {
             <p class="section-sub">Close-to-the-metal engineering — from ARM intrinsics to sub-microsecond order matching.</p>
         </div>
 
-        <div class="card-grid">
+        <div class="masonry">
 
             <div class="feature-card">
                 <div class="card-band band-sky"></div>
@@ -1024,11 +1005,13 @@ footer {
                     <span class="tag-pill">C++</span>
                     <span class="tag-pill">Embedded Control Systems</span>
                     <span class="tag-pill">Fault Tolerance</span>
+                    <span class="tag-pill">Real-Time Simulation</span>
                 </div>
-                <p>A heavy systems simulation environment modeling real-time aerospace digital engine control dynamics.</p>
+                <p>A real-time Full Authority Digital Engine Control (FADEC) simulation environment modelling aerospace jet engine control dynamics. Drives closed-loop engine telemetry with fault detection and automatic safe-state failover to a backup control channel.</p>
                 <ul>
-                    <li>Modeled real-time internal engine telemetry loops and physical state variables.</li>
-                    <li>Implemented a robust, fault-tolerant control architecture designed to switch safely to backup control states upon anomaly detection.</li>
+                    <li>Modelled real-time engine telemetry loops and physical state variables — fuel, pressure, temperature, and control surface positions — in a deterministic simulation cycle.</li>
+                    <li>Implemented a fault-tolerant dual-channel control architecture that detects anomalies and switches safely to a backup control state on trigger.</li>
+                    <li>Built watchdog-based health checks to validate every control transition before commit, mirroring certified FADEC behaviour.</li>
                 </ul>
                 <a href="https://github.com/adarsh-v-h/FADEC-System.git" target="_blank" class="repo-btn">
                     View Repository
@@ -1042,7 +1025,7 @@ footer {
 
 <div class="hairline-divider"></div>
 
-<!-- ── HACKATHONS ───────────────────────────────────────────── -->
+<!-- ── HACKATHONS (MASONRY) ─────────────────────────────────── -->
 <section id="hackathons" class="section-white">
     <div class="section-block">
         <div class="section-head">
@@ -1054,7 +1037,7 @@ footer {
             <p class="section-sub">Real-world constraints, real-world builds — under pressure and on deadline.</p>
         </div>
 
-        <div class="hack-grid">
+        <div class="masonry masonry-hackathons">
 
             <div class="feature-card">
                 <div class="card-band band-sky"></div>
@@ -1135,10 +1118,8 @@ footer {
     </div>
 </section>
 
-<div class="hairline-divider"></div>
-
-<!-- ── LEADERSHIP ───────────────────────────────────────────── -->
-<section id="leadership" class="section-canvas">
+<!-- ── LEADERSHIP (DARK) ────────────────────────────────────── -->
+<section id="leadership" class="section-dark">
     <div class="section-block">
         <div class="section-head">
             <div class="badge-pill">
@@ -1167,7 +1148,7 @@ footer {
     </div>
 </section>
 
-<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<!-- ── FOOTER (DARK) ────────────────────────────────────────── -->
 <footer>
     <div class="footer-inner">
         <div>
@@ -1206,7 +1187,7 @@ footer {
         });
     }
 
-    // Scroll-reveal with IntersectionObserver
+    // Scroll-reveal
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -1218,8 +1199,8 @@ footer {
 
     document.querySelectorAll('.feature-card, .lead-card').forEach(el => observer.observe(el));
 
-    // Staggered delay per grid
-    document.querySelectorAll('.card-grid, .hack-grid, .leadership-grid').forEach(grid => {
+    // Stagger reveal per grid
+    document.querySelectorAll('.masonry, .masonry-hackathons, .leadership-grid').forEach(grid => {
         [...grid.children].forEach((card, i) => {
             card.style.transitionDelay = (i * 0.07) + 's';
         });
